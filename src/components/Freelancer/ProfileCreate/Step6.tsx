@@ -8,6 +8,7 @@ import ButtonLoader from '../../Common/ButtonLoader';
 import { AddQualificationModal } from './AddQualificationModal'; 
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import Loader from '../../Common/Loader';
 
 const MySwal = withReactContent(Swal);
 
@@ -34,7 +35,7 @@ function Step6() {
 		end_date_attended: '',
 		description: ''
 	});
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const handleQualificationClick = () => {
 		setQualificationModal(true);
 	}
@@ -75,7 +76,9 @@ function Step6() {
 			} catch (error) {
 				console.error("Error in API request:", error);
 			} finally {
-				setLoading(false);
+				setTimeout(() => {
+					setLoading(false);
+				}, 500);
 			}
 		};
 	
@@ -125,10 +128,14 @@ function Step6() {
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+                setLoading(false);
+            }, 500);
 		}
 	};
   return (
+	<>
+		<Loader isLoading={loading} />
     <Layout backButton={true} pagetitle="" currentStep={6} issubmitting={false} getStarted={moveAhead}>
 		<div className="air-wiz-body">
 		  <div className="air-carousel-items">
@@ -200,6 +207,7 @@ function Step6() {
 		</div>
 	    <AddQualificationModal selected={selectedrecord} isOpen={qualificationmodal} onClose={() => setQualificationModal(false)} />
 	</Layout>
+	</>
   );
 }
 

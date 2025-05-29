@@ -11,7 +11,7 @@ const PaginationHtml = (props:PaginationProps ) => {
   return (
     <div className="b-pagination-outer">
         <ul id="border-pagination">
-          <li>
+          <li className="leftPrev">
             <a
             //   to={currentPage === 1 ? "#" : `?page=${currentPage - 1}`}
               onClick={(e) => {
@@ -23,7 +23,7 @@ const PaginationHtml = (props:PaginationProps ) => {
               }}
               className={currentPage === 1 ? "disabled" : ""}
             >
-              «
+              <img className="img--fluid" src="/assets/images/pagination-left-icon.svg" alt="" title="" />
             </a>
           </li>
 
@@ -45,7 +45,7 @@ const PaginationHtml = (props:PaginationProps ) => {
           </li>
         ))}
 
-          <li>
+          <li className="RightPrev">
             <a
               onClick={(e) => {
                 if (currentPage === lastPage) {
@@ -56,7 +56,7 @@ const PaginationHtml = (props:PaginationProps ) => {
               }}
               className={currentPage === lastPage ? "disabled" : ""}
             >
-              »
+              <img className="img--fluid" src="/assets/images/pagination-right-icon.svg" alt="" title="" />
             </a>
           </li>
         </ul>

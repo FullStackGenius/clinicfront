@@ -182,7 +182,37 @@ const helpers = {
 			//navigate(page.page_path);
 		}
 		return '/';
-	}
+	},
+	formatDate : function (dateString){
+		const date = new Date(dateString);
+		// Extract date components
+		const day = String(date.getDate()).padStart(2, "0");
+		const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+		const year = date.getFullYear();
+		const hours = String(date.getHours()).padStart(2, "0");
+		const minutes = String(date.getMinutes()).padStart(2, "0");
+	  
+		return `${day}-${month}-${year} ${hours}:${minutes}`;
+	  },
+	  validateTitle : function(title, maxLength = 100, maxWordLength = 50){
+		if (!title || title.trim() === "") {
+		  return "Project title is required.";
+		}
+	  
+		if (title.length > maxLength) {
+		  return `Title cannot exceed ${maxLength} characters.`;
+		}
+	  
+		const words = title.split(" ");
+		for (let word of words) {
+		  if (word.length > maxWordLength) {
+			return `No single word can exceed ${maxWordLength} characters. Word is too long`;
+		  }
+		}
+	  
+		return true; // Validation passed
+	  }
+	  
 }
 
 export default helpers;

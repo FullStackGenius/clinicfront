@@ -6,6 +6,7 @@ import helpers from "../../_helpers/common";
 import ContentLoader from '../Common/ContentLoader';
 import ButtonLoader from '../Common/ButtonLoader';
 import AuthLayout from "../layouts/AuthLayout";
+import Loader from '../Common/Loader';
 
 interface AccountType {
   id: number;
@@ -16,9 +17,9 @@ interface AccountType {
 function SignUpAs() {
 	const navigate = useNavigate();
 	const [accountTypes, setAccountTypes] = useState<AccountType[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
-	const [selected, setSelected] = useState<number | null>(null);
+	const [selected, setSelected] = useState<number | null>(2);
 	const [error, setError] = useState<string | ''>('');
 	
 	useEffect(() => {
@@ -27,6 +28,7 @@ function SignUpAs() {
 	
 	//Get Account Type
 	const getAccountType = async() => {
+		setLoading(true);
         try {
 			const response = await axiosInstance({
 				url: "account-type",
@@ -37,7 +39,9 @@ function SignUpAs() {
 		} catch (error) {
 			console.error("Error in api request:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+				setLoading(false);
+			  }, 500);
 		}
     };
 	
@@ -49,6 +53,7 @@ function SignUpAs() {
 			setSubmitting(true);
 			const loggedIn = checkUserLoggedIn();
 			if(!loggedIn){
+				//console.log(selected)
 				navigate('/sign-up', { state: {role: selected}})
 			}else{
 				updateUserRole();
@@ -88,6 +93,9 @@ function SignUpAs() {
 	}
 	
   return (
+	<>
+	
+	<Loader isLoading={loading} />
 	<AuthLayout>
     <section className="customer-login client-customer-register">
         <div className="colm-6 form-colm">
@@ -98,12 +106,12 @@ function SignUpAs() {
 				</div>
 				<div className="login-form">
 					<form className="register-form">
-						{!loading ? (
+						{accountTypes &&
 							<>
 								<div className="tw-radio-btns">
 									{accountTypes.map((item,index) => (
 										<div key={index} className="air3-radioBtn-box" onClick={() => setSelected(item.id)}>
-										   <input className="form-check-input" type="radio" name="account_type" id="account_type" />
+										   <input className="form-check-input" type="radio" name="account_type" id="account_type"  defaultChecked={item.id === 2} />
 										   <div className="form-radio-bg">
 											  <div className="air3-radio-label-check-icon">
 												 <div className="air3-checkbox-input">
@@ -136,18 +144,15 @@ function SignUpAs() {
 										{!submitting ? 'Create my account' : <ButtonLoader />}
 									</button>
 								</p>
-							</>
-						) : (
-							<div className="tw-radio-btns">
-								<ContentLoader />
-							</div>
-						)}
+								</>
+							}
 					</form>
                   <div className="term-text-block">
-                     <p>By clicking “Sign up” you’re agreeing to our <a href="javascript;;">Terms & Conditions</a>.</p>
+                     <p>By clicking “Sign up” you’re agreeing to our <a href="#">Terms & Conditions</a>.</p>
                   </div>
                   <div className="have-account">
                      <p>Have an account? <Link to="/sign-in">Sign In</Link></p>
+					 <p>Back to <Link to="/">Home</Link></p>
                   </div>
                </div>
             </div>
@@ -162,6 +167,8 @@ function SignUpAs() {
          </div>
       </section>
 	</AuthLayout> 
+	</>
+       
   );
 }
 

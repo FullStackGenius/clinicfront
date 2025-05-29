@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../../../redux/store';
@@ -7,6 +7,8 @@ import Layout from './Layout';
 import ContentLoader from '../../Common/ContentLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import JoditEditor from 'jodit-react';
+import Loader from '../../Common/Loader';
 
 
 function Step3() {
@@ -16,18 +18,54 @@ function Step3() {
 	const [projectrequirment, setProjectRequirment] = useState('');
 	const [error, setError] = useState<string>('');
 	const [submitting, setSubmitting] = useState(false);
-	
+	const [loading, setLoading] = useState(true);
+	const editor = useRef(null);
 	useEffect(() => {
 		if(project && project.description){
-			setProjectRequirment(String(project.description));
+			fetchProjectDetails(project.id);
+			//setProjectRequirment(String(project.description));
 		}
+		setTimeout(() => {
+			setLoading(false);
+		}, 500);
 	}, [project]);
+
+	const [placeholder, setPlaceholder] = useState<string>("Describe what you need");
+
+	// Jodit Editor Configuration
+	const config = useMemo(
+	  () => ({
+		readonly: false,
+		placeholder: (projectrequirment)?placeholder:"",
+		askBeforePasteHTML: false, //  Disable paste confirmation popup
+        askBeforePasteFromWord: false,
+        defaultActionOnPaste: "insert_clear_html" as const, //  Fix TypeScript error
+        pasteHTMLActionList: [
+            { value: "insert", text: "Insert" },
+            { value: "insert_clear_html", text: "Insert Clean HTML" },
+            { value: "insert_only_text", text: "Insert as Text" }
+        ],
+        toolbarAdaptive: false,
+		height: 350,
+        disablePlugins: "about",
+		buttons: [
+            "bold", "italic", "underline", "strikethrough", 
+            "|",
+            "ul", "ol", 
+            "|",
+            "link", "image", 
+            "|",
+            "align", "undo", "redo"
+        ],
+	  }),
+	  [placeholder]
+	);
 	
-	const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {	
-		const { name, value } = e.target;
-		let clean_val = value;
+	const handleChange = (newContent: string) => {	
+		// const { name, value } = e.target;
+		// let clean_val = value;
 		// Update form data with calculated service_rate and income
-		setProjectRequirment(clean_val);
+		setProjectRequirment(newContent);
 		// Clear error for this field if it exists
 		setError('');
 	};
@@ -59,30 +97,69 @@ function Step3() {
 			} catch (error) {
 				console.error("Error in API request:", error);
 			} finally {
-				setSubmitting(false);
+				
+					setTimeout(() => {
+						
+						setLoading(false);
+					}, 500);
+		
 			}
 		}
 	};
+
+	const fetchProjectDetails = async (id: number) => {
+		try {
+			setLoading(true)
+		  // Ensure axiosInstance is properly configured
+		  const response = await axiosInstance.post("project/get-project-detail", { project_id: id });
+	  
+		  // Ensure response exists before proceeding
+		  if (!response || !response.data || !response.data.project) {
+			throw new Error("Invalid response structure");
+		  }
+	  
+		  const saved_data = response.data.project;
+		  setProjectRequirment(String(saved_data.description));
+		} catch (error) {
+		  console.error("Error fetching project details:", error);
+		}finally {
+			setTimeout(() => {
+				
+				setLoading(false);
+			}, 500);
+		}
+	  };
+	  
 	//console.log('projecttitle', projecttitle)
 	return (
+		<>
+		<Loader isLoading={loading} />
 		<Layout backButton={false} pagetitle="Describe your hiring needs" currentStep={3} issubmitting={submitting} getStarted={saveData}>
 			<div className="hiring-jobForms">
 				<div className="form-listing-text">
 				 <h5>Be clear about</h5>
 				 <ul>
-					<li><a href="#">Deliverables</a>, what type of finished products will you be expecting?</li>
-					<li><a href="#">Timelines</a>, is this something you need done within a certain time frame?</li>
-					<li><a href="#">Specialties</a>, do you require the accountant to have experience?</li>
-					<li><a href="#">Certifications</a>, are you looking for them to be accredited in certain areas?</li>
+					<li>Deliverables, what type of finished products will you be expecting?</li>
+					<li>Timelines, is this something you need done within a certain time frame?</li>
+					<li>Specialties, do you require the accountant to have experience?</li>
+					<li>Certifications, are you looking for them to be accredited in certain areas?</li>
 				 </ul>
 				</div>	
 			  <div className="hiring-forms-items">
 				 <div className="form-group">
 					<label>Describe what you need</label>
-                     <textarea name="message" className="form-control" style={{ textTransform: 'none'}} cols={30} rows={5} placeholder="Already have description ? paste it here"
+					<JoditEditor
+			ref={editor}
+			value={projectrequirment}
+			onBlur={handleChange}
+			className="form-control"
+			config={config}
+			
+		/>
+                     {/* <textarea name="message" className="form-control" style={{ textTransform: 'none'}} cols={30} rows={5} placeholder="Already have description ? paste it here"
 						value={projectrequirment}
-						onChange={handleChange}
-					></textarea>
+						onChange={() =>handleChange}
+					></textarea> */}
 					<div className="air-form-message form-message-error"
 					   style={{ display: error !== '' ? 'flex' : 'none' }}
 					>
@@ -95,6 +172,7 @@ function Step3() {
 			  </div>
 			</div>
 	</Layout>
+	</>
 	);
 }
 

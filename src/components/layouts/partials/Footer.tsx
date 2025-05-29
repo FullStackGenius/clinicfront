@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from "react-router-dom";
-import ContentLoader from '../../Common/ContentLoader';
-import helpers from "../../../_helpers/common";
+import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../../_helpers/axiosInstance";
+import { checkUserLoggedIn } from '../../../_helpers/checkUserLoggedIn';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
 
 interface Setting {
 	id: number;
@@ -18,7 +19,9 @@ function Footer() {
 	const [setting, setSetting] = useState<Setting>({id: 0, website_logo: '', website_logo_path: '', facebook_link: '', instagram_link: '', twitter_link: '', linkedin_link: ''});
 	const [loading, setLoading] = useState(true);
 	const hasFetchedData = useRef(false);
-	
+	const navigate = useNavigate();
+	 const loggedIn = checkUserLoggedIn();
+	 const user = useSelector((state: RootState) => state.user.user);
 	useEffect(() => {
 		if (!hasFetchedData.current) {
 			hasFetchedData.current = true
@@ -30,7 +33,6 @@ function Footer() {
 		try {
 			setLoading(true);
 			const response = await axiosInstance.get('get-website-setting');
-			//console.log('response', response)
 			setSetting(response.data.settings);
 			
 		} catch (error) {
@@ -39,6 +41,10 @@ function Footer() {
 			setLoading(false);
 		}
 	};
+
+	const handleRedirectToSignup = (roleId: number): void => {
+		navigate(`/sign-up?role=${roleId}`);
+	 };
 	
 	return (
 		<footer>
@@ -47,30 +53,30 @@ function Footer() {
 				   <div className="footer-items d-flex flex-wrap">
 					  <div className="footer-one">
 						 <div className="footer-contact-info">
-							<div className="footer-logo">
-							   <img className="img-fluid" src="/assets/images/logo-img.svg" alt="" title="" />
-							</div>
+							{ setting && setting.website_logo_path && <div className="footer-logo">
+							   <img loading="lazy" className="img-fluid" src={setting.website_logo_path} alt="" title="" height="50px" width="50px"/>
+							</div> }
 							<p>It is a long established fact that a reader will be distracted by the readable content of a page</p>
 							<div className="footer-social">
 							   <ul>
 									<li>
 										<Link to={setting.facebook_link} target={'_blank'}>
-											<img className="img-fluid" src="/assets/images/facebook-icon.svg" alt="" title="" />
+											<img loading="lazy" className="img-fluid" src="/assets/images/facebook-icon.svg" alt="" title="" />
 										</Link>
 									</li>
 									<li>
 										<Link to={setting.instagram_link} target={'_blank'}>
-											<img className="img-fluid" src="/assets/images/instagram-icon.svg" alt="" title="" />
+											<img loading="lazy" className="img-fluid" src="/assets/images/instagram-icon.svg" alt="" title="" />
 										</Link>
 									</li>
 									<li>
 										<Link to={setting.twitter_link} target={'_blank'}>
-											<img className="img-fluid" src="/assets/images/twitter-icon.svg" alt="" title="" />
+											<img loading="lazy" className="img-fluid" src="/assets/images/twitter-icon.svg" alt="" title="" />
 										</Link>
 									</li>
 									<li>
 										<Link to={setting.linkedin_link} target={'_blank'}>
-											<img className="img-fluid" src="/assets/images/linkedin-icon.svg" alt="" title="" />
+											<img loading="lazy" className="img-fluid" src="/assets/images/linkedin-icon.svg" alt="" title="" />
 										</Link>
 									</li>
 								  <li></li>
@@ -80,41 +86,76 @@ function Footer() {
 							</div>
 						 </div>
 					  </div>
-					  <div className="footer-two">
+					{ !loggedIn  && <>
+					<div className="footer-two">
 						 <div className="footer-menu">
-							<h3>quick Links</h3>
+							<h3>Freelancers</h3>
 							<div className="menu-items">
 							   <ul>
-								  <li><a href="#">Text here</a></li>
-								  <li><a href="#">Text here</a></li>
-								  <li><a href="#">Text here</a></li>
-								  <li><a href="#">Text here</a></li>
-								  <li><a href="#">Contact</a></li>
+								  <li><Link to="/way-to-earn">Ways to Earn</Link></li>
+								  <li style={{ cursor: "pointer" }} onClick={() => handleRedirectToSignup(3)} ><a onClick={() => handleRedirectToSignup(3)} >Find Work</a></li>
+								  <li style={{ cursor: "pointer" }}  onClick={() => handleRedirectToSignup(3)} ><a  onClick={() => handleRedirectToSignup(3)} >Apply</a></li>
+								 
+								
 							   </ul>
 							</div>
 						 </div>
 					  </div>
 					  <div className="footer-three">
 						 <div className="footer-menu">
-							<h3>Company</h3>
+							<h3>Clients</h3>
 							<div className="menu-items">
 							   <ul>
-								  <li><a href="#">Text here</a></li>
-								  <li><a href="#">Text here</a></li>
-								  <li><a href="#">Text here</a></li>
-								  <li><a href="#">Text here</a></li>
+								  <li><Link to="/our-freelancer">Talent Marketplace</Link></li>
+								  <li style={{ cursor: "pointer" }} onClick={() => handleRedirectToSignup(2)}><a  onClick={() => handleRedirectToSignup(2)} >Consultations</a></li>
+								  <li><Link to="/our-prices">Pricing</Link></li>
+								  {/* <li><a href="#">Text here</a></li> */}
+							   </ul>
+							</div>
+						 </div>
+					  </div> </> }
+
+					  {loggedIn && Number(user?.role_id) === 2 && <>
+						<div className="footer-three">
+						 <div className="footer-menu">
+							<h3>Clients</h3>
+							<div className="menu-items">
+							   <ul>
+								  <li><Link to="/our-freelancer">Talent Marketplace</Link></li>
+								 
+								  <li><Link to="/our-prices">Pricing</Link></li>
+								 
 							   </ul>
 							</div>
 						 </div>
 					  </div>
-					  <div className="footer-four">
+					  </>}
+
+					  {loggedIn && Number(user?.role_id) === 3 && <>
+						<div className="footer-two">
 						 <div className="footer-menu">
-							<h3>Information</h3>
+							<h3>Freelancers</h3>
 							<div className="menu-items">
 							   <ul>
-								  <li><a href="#">Text here</a></li>
-								  <li><a href="#">Text here</a></li>
-								  <li><a href="#">Text here</a></li>
+								  <li><Link to="/way-to-earn">Ways to Earn</Link></li>
+								  <li style={{ cursor: "pointer" }}><Link to="/projects" >Find Work</Link></li>
+								  
+								
+							   </ul>
+							</div>
+						 </div>
+					  </div>
+</>}
+
+					  <div className="footer-four">
+						 <div className="footer-menu">
+							<h3>Company</h3>
+							<div className="menu-items">
+							   <ul>
+								  <li><Link to="/contact-us">Contact Us</Link></li>
+								  <li><Link to="/resources">Resources</Link></li>
+								  <li><Link to="/privacy-policy">Legal Documents</Link></li>
+								
 							   </ul>
 							</div>
 						 </div>
@@ -126,10 +167,10 @@ function Footer() {
 				<div className="main-container">
 				   <div className="copyright-block">
 					  <div className="copyright-text">
-						 <p>Copyright © 2024  Company name</p>
+						 <p>Copyright © {new Date().getFullYear()}  Company name</p>
 					  </div>
 					  <div className="right-text">
-						 <p>All Rights Reserved</p>
+						 <p>All Rights Reserved {new Date().getFullYear()}</p>
 					  </div>
 				   </div>
 				</div>

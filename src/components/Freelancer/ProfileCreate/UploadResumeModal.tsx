@@ -2,7 +2,11 @@ import React, { useState, useRef } from "react";
 import helpers from "../../../_helpers/common";
 import ButtonLoader from '../../Common/ButtonLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
+import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2';
 
+
+const MySwal = withReactContent(Swal);
 interface ResumeModalProps {
 	isOpen: boolean;
 	onClose: () => void;
@@ -83,6 +87,14 @@ export const UploadResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose 
 					});
 			//console.log('response', response);
 			if(response.error === 'false'){
+				MySwal.fire({
+					title: "Success!",
+					text: "Your Resume has been uploaded.",
+					icon: "success",
+					timer: 1500, // Closes after 2 seconds
+					showConfirmButton: false,
+				  });
+				  
 				setResume(null);
 				onClose();
 			}

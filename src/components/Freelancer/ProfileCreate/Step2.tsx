@@ -5,6 +5,7 @@ import ContentLoader from '../../Common/ContentLoader';
 import ButtonLoader from '../../Common/ButtonLoader'; 
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import Loader from '../../Common/Loader';
 
 interface Category {
   id: number;
@@ -24,7 +25,7 @@ function Step2() {
 	const [subcategories, setSubCategories] = useState<SubCategory[]>([]);
 	const [selectedcategory, setSelectedCategory] = useState<number>(0);
 	const [selectedsubcat, setSelectedSubCat] = useState<number[]>([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [loadingsub, setLoadingSub] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string>('');
@@ -49,7 +50,9 @@ function Step2() {
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+                setLoading(false);
+            }, 500);
 		}
 	}
 	//fetch the presaved data
@@ -105,11 +108,14 @@ function Step2() {
 		//clear error message
 		setError('');
 		if (e.target.checked) {
-			if(selectedsubcat.length < 3){
+			if(selectedsubcat){
 				setSelectedSubCat([...selectedsubcat, checkedId]);
-			}else{
-				setError('You can select up to 3 services only.');
 			}
+			// if(selectedsubcat.length < 3){
+			// 	setSelectedSubCat([...selectedsubcat, checkedId]);
+			// }else{
+			// 	setError('You can select up to 3 services only.');
+			// }
 		} else {
 			setSelectedSubCat(selectedsubcat.filter(id => id !== checkedId));
 		}
@@ -150,21 +156,20 @@ function Step2() {
 	}
 	
 	return (
+		<>
+			<Loader isLoading={loading} />
     <Layout backButton={true} pagetitle="" currentStep={2} issubmitting={submitting} getStarted={saveData}>
 	   <div className="air-wiz-body">
 		  <div className="air-carousel-items">
 			 <div id="step-item-2" className="air-step-items">
 				<div className="step-title-container">
-				   <h2>Great so what kind of work are you here to do ?</h2>
+				   <h2>Great! What type of work are you here to do?</h2>
 				</div>
 				<div className="categories-steps">
 				   <div className="air-categories-items desktop-items-display">
 						<div className="left d-flex flex-column">
-						{loading ? (
-							<ContentLoader />
-						):(
-							<>
-							 <div className="tip-title">Select 1 category</div>
+						{categories && <>
+							 <div className="tip-title">Select Your Categories</div>
 							 <nav>
 								<ul className="cat air-list-nav">
 									{categories.map((item) => (
@@ -177,14 +182,12 @@ function Step2() {
 								</ul>
 							 </nav>
 							 </>
-						)}
+							}
 						</div>
 						<div className="right d-flex flex-column">
-							<div className="tip-title">Now, select 1 to 3 specialties</div>
+							<div className="tip-title">Select Specialties Based on Categories</div>
 							<div className="specialties-items">
-								{loadingsub ? (
-									<ContentLoader />
-								):(
+								{subcategories  && <>
 									<fieldset>
 									   {subcategories.map(subcat => (
 											<label key={subcat.id} className="air-checkbox-label">
@@ -203,7 +206,8 @@ function Step2() {
 											</label>
 										))}
 									</fieldset>
-								)}	
+									</>
+								}	
 								{error ? (
 									<div className="air-form-message form-message-error">
 									   <div className="air-icons">
@@ -363,6 +367,7 @@ function Step2() {
 			</div>
 	    </div>
 	</Layout>
+	</>
   );
 }
 

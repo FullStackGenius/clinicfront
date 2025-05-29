@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Layout from './Layout';
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import Loader from '../../Common/Loader';
 
 type HourlyRateState = {
   hour_rate: number | string;
@@ -11,7 +12,7 @@ type HourlyRateState = {
 };
 
 function Step9() {
-  const service_charge = 10; // 10% service charge
+  const service_charge = 30; // 10% service charge
   const navigate = useNavigate();
   const [formData, setFormData] = useState<HourlyRateState>({ hour_rate: '', service_rate: '', income: '' });
   const [errors, setErrors] = useState<Partial<HourlyRateState>>({});
@@ -48,7 +49,9 @@ function Step9() {
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
 		}
 	};
 
@@ -132,6 +135,8 @@ function Step9() {
   };
 
   return (
+    <>
+    	<Loader isLoading={loading} />
     <Layout backButton={true} pagetitle="" currentStep={9} issubmitting={submitting} getStarted={saveData}>
       <div className="air-wiz-body">
         <div className="air-carousel-items">
@@ -186,6 +191,7 @@ function Step9() {
                         <div className="input-group">
                           <input type="text" className="air-input" disabled={true} placeholder="$0.00" value={formData.service_rate} />
                         </div>
+                        <span id="hourly-rate-description" className="sr-only">/hr</span>
                       </div>
                     </div>
                   </div>
@@ -212,6 +218,7 @@ function Step9() {
         </div>
       </div>
     </Layout>
+    </>
   );
 }
 

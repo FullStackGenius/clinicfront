@@ -7,11 +7,12 @@ import Layout from './Layout';
 import ContentLoader from '../../Common/ContentLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import Loader from '../../Common/Loader';
 
 interface ProjectType {
-  id: number;
-  name: string;
-  description: string;
+	id: number;
+	name: string;
+	description: string;
 }
 
 function Step1() {
@@ -21,35 +22,38 @@ function Step1() {
 	const [projecttypes, setProjectTypes] = useState<ProjectType[]>([]);
 	const [projecttype, setProjectType] = useState(0);
 	const [error, setError] = useState<string>('');
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
-	
+
 	useEffect(() => {
 		fetchProjectTypes();
 	}, []);
-	
+
 	useEffect(() => {
-		if(project && project.project_type_id){
+		if (project && project.project_type_id) {
 			setProjectType(project.project_type_id);
 		}
 	}, [project]);
-	
+
 	const fetchProjectTypes = async () => {
 		try {
 			setLoading(true);
 			const response: any = await axiosInstance({
-					url: 'get-project-type',
-					method: "GET"
-				});
+				url: 'get-project-type',
+				method: "GET"
+			});
 			//console.log('get-user-step-data', response)
 			setProjectTypes(response.data.project_type);
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+				setLoading(false);
+			}, 500);
+			//setLoading(false);
 		}
 	};
-	
+
 	// Validate the form
 	const validate = (): boolean => {
 		if (projecttype === 0) {
@@ -61,18 +65,18 @@ function Step1() {
 
 	// Save data (simulated API call)
 	const saveData = async (): Promise<void> => {
-		if(!project){
+		if (!project) {
 			if (validate()) {
 				try {
 					setSubmitting(true);
 					const response: any = await axiosInstance({
-								url: 'project/save-project-type', 
-								method: "POST",
-								data: {project_type : projecttype}
-							});
+						url: 'project/save-project-type',
+						method: "POST",
+						data: { project_type: projecttype }
+					});
 					//console.log('response', response);
 					//console.log('response.data.project', response.data.project);
-					if(response.error === 'false'){
+					if (response.error === 'false') {
 						dispatch(setProject(response.data.poject));
 						navigate(`/client/create-project-step-two`); // Navigate to next step
 					}
@@ -82,84 +86,83 @@ function Step1() {
 					setSubmitting(false);
 				}
 			}
-		}else{
+		} else {
 			navigate(`/client/create-project-step-two`);
 		}
 	};
 	//console.log('projecttype', projecttype)
 	return (
-		<Layout backButton={false} pagetitle="How can we help you get started ?" currentStep={1} issubmitting={submitting} getStarted={saveData}>
-		   <div className="project-accordions">
-				 <div className="accordionItem is-active">
-					<h3 className="accordionThumb">I want to create a new job post 
-						<span className="acc-arrow">
-							<img className="img-fluid" src="/assets/images/accordion-icon.svg" alt="" title="" />
-						</span>
-					</h3>
-					<div className="accordionPanel">
-					   <div className="box-radio-group">
-							{loading ? (
-								<div>
-									<ContentLoader />
-								</div>
-							) : (
-								<>
-								{projecttypes.length > 0 ? (
-									<>
-										{projecttypes.map((item,index) => (
-											<div key={index} className="first-button-box">
-											 <div className="air3-radioBtn-box">
-												<input className="form-check-input" 
-													type="radio" 
-													value={item.id} 
-													name="project-type" 
-													id="radio-group-1" 
-													checked={projecttype === item.id}
-													onChange={(e) => setProjectType(item.id)}
-												/>
-												<div className="form-radio-bg">
-												   <div className="air3-radio-label-check-icon">
-													  <div className="air3-checkbox-input">
-														<span className="air3-radio-icon">
-															<img className="img-fluid" src="/assets/images/active-check-icon.svg" alt="" title="" />
-														</span>
-													  </div>
-												   </div>
-												   <div className="air3-icon-lg">
-													{item.id === 1 ? (
-														 <img className="img-fluid" src="/assets/images/project-icons.svg" alt="" title="" />
-													) : ( 
-														<img className="img-fluid" src="/assets/images/short-term-icon.svg" alt="" title="" />
-													)}
-												   </div>
-												   <div className="air3-btn-box-label">
-													  <h4>{item.name}</h4>
-													  <div className="air3-btn-box-text">{item.description}</div>
-												   </div>
-												</div>
-											 </div>
-											</div>
-										))}
-									</>
-								) : (
-									<p>No Content Found</p>
-								)}
-								</>
-							
-						)}
-					   </div>
-						<div className="air-form-message form-message-error"
-						   style={{ display: error !== '' ? 'flex' : 'none' }}
-						>
-							<div className="air-icons">
-								<img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+		<>
+			<Loader isLoading={loading} />
+			<Layout backButton={false} pagetitle="How can we help you get started ?" currentStep={1} issubmitting={submitting} getStarted={saveData}>
+				<div className="project-accordions">
+					<div className="accordionItem is-active">
+						<h3 className="accordionThumb">I want to create a new job post
+							<span className="acc-arrow">
+								<img className="img-fluid" src="/assets/images/accordion-icon.svg" alt="" title="" />
+							</span>
+						</h3>
+						<div className="accordionPanel">
+							<div className="box-radio-group">
+								
+										{projecttypes && projecttypes.length > 0 ? (
+											<>
+												{projecttypes.map((item, index) => (
+													<div key={index} className="first-button-box">
+														<div className="air3-radioBtn-box">
+															<input className="form-check-input"
+																type="radio"
+																value={item.id}
+																name="project-type"
+																id="radio-group-1"
+																checked={projecttype === item.id}
+																onChange={(e) => setProjectType(item.id)}
+															/>
+															<div className="form-radio-bg">
+																<div className="air3-radio-label-check-icon">
+																	<div className="air3-checkbox-input">
+																		<span className="air3-radio-icon">
+																			<img className="img-fluid" src="/assets/images/active-check-icon.svg" alt="" title="" />
+																		</span>
+																	</div>
+																</div>
+																<div className="air3-icon-lg">
+																	{item.id === 1 ? (
+																		<img className="img-fluid" src="/assets/images/project-icons.svg" alt="" title="" />
+																	) : (
+																		<img className="img-fluid" src="/assets/images/short-term-icon.svg" alt="" title="" />
+																	)}
+																</div>
+																<div className="air3-btn-box-label">
+																	<h4>{item.name}</h4>
+																	<div className="air3-btn-box-text">{item.description}</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												))}
+											</>
+										) : (
+											<p>No Content Found</p>
+										)}
+									
 							</div>
-							<span>{error}</span>
+							<div className="air-form-message form-message-error"
+								style={{ display: error !== '' ? 'flex' : 'none' }}
+							>
+								<div className="air-icons">
+									<img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+								</div>
+								<span>{error}</span>
+							</div>
 						</div>
 					</div>
-				 </div>
-			  </div>
-	</Layout>
+				</div>
+			</Layout>
+
+		</>
+
+
 	);
 }
 

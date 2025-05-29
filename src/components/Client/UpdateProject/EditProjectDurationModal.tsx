@@ -6,6 +6,7 @@ import helpers from "../../../_helpers/common";
 import ContentLoader from '../../Common/ContentLoader';
 import ButtonLoader from '../../Common/ButtonLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
+import Loader from "../../Common/Loader";
 
 
 interface DurationModalProps {
@@ -38,7 +39,7 @@ export const EditProjectDurationModal: React.FC<DurationModalProps> = ({ id, pre
 	
 	const fetchProjectInfo = async () => {
 		try {
-			setLoading(true);
+			//setLoading(true);
 			const response: any = await axiosInstance({
 					url: 'get-scope-project-content',
 					method: "GET"
@@ -47,7 +48,7 @@ export const EditProjectDurationModal: React.FC<DurationModalProps> = ({ id, pre
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			//setLoading(false);
 		}
 	};
 	
@@ -93,14 +94,13 @@ export const EditProjectDurationModal: React.FC<DurationModalProps> = ({ id, pre
 	};
 	
 	return (
+		<>
+			<Loader isLoading={loading} />
 		<div id="pr-title-edit-popup" className="air-modal-popup" style={{ display: isOpen ? 'block' : 'none' }}>
          <div className="air-modal-items air-modal-import-resume-modal">
 			
 				<div className="airModal-content">
-					{loading ? (
-						<ContentLoader />
-					) : (
-						<>
+					
 						<div className="airModal-header">
 							<h2 className="airModal-title h2">Edit Project Duration</h2>
 							<button className="airModal-close" type="button" onClick={handleClose}>
@@ -116,7 +116,7 @@ export const EditProjectDurationModal: React.FC<DurationModalProps> = ({ id, pre
 								   <h3>What is the estimated duration of your project?</h3>
 								</div>
 								<div className="work-bg-colr">
-								   {duration.length > 0 ? (
+								   {duration && duration.length > 0 ? (
 										<>
 										{duration.map((item,index) => (
 											<div key={index} className="radio-check-box">
@@ -161,11 +161,12 @@ export const EditProjectDurationModal: React.FC<DurationModalProps> = ({ id, pre
 								</button>
 							</div>
 						</div>
-						</>
-					)}	
+						
 				</div>
 			
          </div>
       </div>
+	  </>
+	  
 	);
 };

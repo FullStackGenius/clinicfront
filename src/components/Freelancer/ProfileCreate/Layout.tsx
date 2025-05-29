@@ -100,7 +100,7 @@ const Layout: React.FC<LayoutProps> = ({ children, backButton, pagetitle, curren
 										<div className="quik-right-btn">
 											<button className="skip-air-btn" onClick={handleNextStep}>Skip for Now</button>
 											<button className="started-air-btn bg-back-btns" onClick={getStarted}>
-												{!issubmitting ? 'Get Started' : <ButtonLoader />}
+												{!issubmitting ? 'Next' : <ButtonLoader />}
 											</button>
 										</div>
 									</div>

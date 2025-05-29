@@ -7,6 +7,7 @@ import ButtonLoader from '../../Common/ButtonLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
 import { EditLanguageModal } from './EditLanguageModal';
+import Loader from '../../Common/Loader';
 
 const MySwal = withReactContent(Swal);
 
@@ -48,7 +49,7 @@ function Step7() {
 	const [languagemodal, setLanguageModal] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
 	const [savedlanguages, setSavedLanguages] = useState<SavedLanguage[]>([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [selectedrecord, setSelectedRecord] = useState<SavedLanguage>({
 		id: 0,
 		language_id: 0,
@@ -88,7 +89,9 @@ function Step7() {
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+				setLoading(false);
+			}, 500);
 		}
 	};
 
@@ -105,7 +108,9 @@ function Step7() {
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+				setLoading(false);
+			}, 500);
 		}
 	};
 	
@@ -138,7 +143,7 @@ function Step7() {
 	
 	// Save data (simulated API call)
 	const saveData = async (): Promise<void> => {
-		console.log('save data function called')
+		
 		if (validate()) {
 			try {
 				setSubmitting(true);
@@ -207,6 +212,8 @@ function Step7() {
 		}
 	};
 	return (
+		<>
+			<Loader isLoading={loading} />
 		<Layout backButton={true} pagetitle="" currentStep={7} issubmitting={false} getStarted={moveAhead}>
 			<div className="air-wiz-body">
 			  <div className="air-carousel-items">
@@ -244,7 +251,7 @@ function Step7() {
 						  </div>
 						  <div className="proftiency-title-items">
 							 <div className="from-grup">
-								<label>Proftiency</label>
+								<label>Proficiency</label>
 								<select className="form-control" 
 									name="proficiency"
 									value={formData.proficiency}
@@ -316,6 +323,7 @@ function Step7() {
 		   </div>
 			<EditLanguageModal selected={selectedrecord} isOpen={languagemodal} onClose={() => setLanguageModal(false)} />
 		</Layout>
+		</>
 	);
 }
 

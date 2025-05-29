@@ -7,6 +7,12 @@ import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
 import { getUserInfo } from "../../../_helpers/getUserInfo";
 
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import Loader from '../../Common/Loader';
+
+const MySwal = withReactContent(Swal);
+
 interface Profile {
 	date_of_birth: string;
 	street_address: string;
@@ -35,7 +41,7 @@ function Step10() {
 	const [preprofile, setPreProfile] = useState<Profile | null>(null);
 	const [preprofileimage, setPreProfileImage] = useState('');
 	const [imagemodal, setImageModal] = useState(false);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const imageref = useRef<HTMLInputElement>(null);
 	const hasFetchedData = useRef(false);
 	
@@ -74,7 +80,9 @@ function Step10() {
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+				setLoading(false);
+			}, 500);
 		}
 	};
 	
@@ -178,6 +186,13 @@ function Step10() {
 				//console.log('response', response);
 
 				if(response.error === 'false'){
+					MySwal.fire({
+						title: "Success!",
+						text: "Congradulations! Please review your finished profile.",
+						icon: "success",
+						timer: 5000, // Closes after 2 seconds
+						showConfirmButton: false,
+					  })
 					navigate(`/freelancer/view-profile/${getUserInfo('id')}`); // Navigate to next step
 				}
 			} catch (error) {
@@ -242,6 +257,8 @@ function Step10() {
 	};
 
 	return (
+		<>
+			<Loader isLoading={loading} />
 		<Layout backButton={true} pagetitle="" currentStep={10} issubmitting={submitting} getStarted={saveData}>
 		   <div className="air-wiz-body">
 			  <div className="air-carousel-items">
@@ -452,6 +469,7 @@ function Step10() {
 		   </div>
 			<EditProfileImageModal isOpen={imagemodal} onClose={() => setImageModal(false)}  />
 		</Layout>
+		</>
 	);
 }
 

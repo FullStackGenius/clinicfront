@@ -8,7 +8,7 @@ const MySwal = withReactContent(Swal);
 const axiosInstance = axios.create({
 	//baseURL: "https://api.example.com", // Replace with your API's base URL
 	baseURL: process.env.REACT_APP_ENDPOINT, // Replace with your API's base URL
-	timeout: 10000, // Request timeout in milliseconds
+	timeout: 20000, // Request timeout in milliseconds
 	headers: {
 		"Content-Type": "application/json",
 	},
@@ -72,10 +72,14 @@ axiosInstance.interceptors.response.use(
 				const { status, data } = error.response;
 				const message = data?.message || "An error occurred!";
 				const error_type = data?.type || "error";
+				if(status === 401){
+					localStorage.clear();
+					window.location.href = '/sign-in';
+				} 
 				//toast.error(`Error ${status}: ${message}`, { duration: 9000, style: { minWidth: '250px' } });
 				if(error_type.type === 'unauthorized'){
 					localStorage.clear();
-					window.location.href = '/login';
+					window.location.href = '/sign-in';
 				} else if (error_type === "validation") {
 					const validationError = message;
 					if (validationError && Object.keys(validationError).length > 0) {

@@ -6,6 +6,7 @@ import helpers from "../../../_helpers/common";
 import ContentLoader from '../../Common/ContentLoader';
 import ButtonLoader from '../../Common/ButtonLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
+import Loader from "../../Common/Loader";
 
 
 interface SkillModalProps {
@@ -37,7 +38,7 @@ export const EditSkillModal: React.FC<SkillModalProps> = ({ id, isOpen, onClose 
 	
 	const fetchProjectDetails = async (id: number) => {
 		try {
-			setLoading(true);
+			//setLoading(true);
 			const response: any = await axiosInstance({
 			  url: 'project/get-project-detail',
 			  method: "POST",
@@ -47,13 +48,13 @@ export const EditSkillModal: React.FC<SkillModalProps> = ({ id, isOpen, onClose 
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			//setLoading(false);
 		}
 	};
 	
 	const fetchSkillsData = async () => {
 		try {
-			setLoading(true);
+			//setLoading(true);
 			const response: any = await axiosInstance({
 					url: 'get-project-desired-account',
 					method: "GET"
@@ -62,7 +63,7 @@ export const EditSkillModal: React.FC<SkillModalProps> = ({ id, isOpen, onClose 
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			//setLoading(false);
 		}
 	};
 	
@@ -123,13 +124,12 @@ export const EditSkillModal: React.FC<SkillModalProps> = ({ id, isOpen, onClose 
 		return false;
 	}
 	return (
+		<>
+			<Loader isLoading={loading} />
 		<div id="pr-title-edit-popup" className="air-modal-popup" style={{ display: isOpen ? 'block' : 'none' }}>
          <div className="air-modal-items air-modal-import-resume-modal">
             <div className="airModal-content">
-			{loading ? (
-				<ContentLoader />
-			) : (
-				<>
+			
                <div className="airModal-header">
 					<h2 className="airModal-title h2">Edit Skills</h2>
 					<button className="airModal-close" type="button" onClick={handleClose}>
@@ -145,7 +145,7 @@ export const EditSkillModal: React.FC<SkillModalProps> = ({ id, isOpen, onClose 
                         <div className="accordionPanel">
                            <div className="acc-skill-items">
                               <div className="skill-with-see">
-									{selectedskill.length > 0 ? (
+									{selectedskill && selectedskill.length > 0 ? (
 									 <ul className="d-flex flex-wrap align-items-center">
 										{selectedskill.map((item) => (
 											<li key={'skill'+item.id} className={`is-active`} onClick={() => selectUnselectSkill(item)}>
@@ -206,10 +206,10 @@ export const EditSkillModal: React.FC<SkillModalProps> = ({ id, isOpen, onClose 
 						</button>
 					</div>
 				</div>
-				</>
-			)}
+				
             </div>
          </div>
       </div>
+	  </>
 	);
 };

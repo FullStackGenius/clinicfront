@@ -7,6 +7,7 @@ import Layout from './Layout';
 import ContentLoader from '../../Common/ContentLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import Loader from '../../Common/Loader';
 
 interface ProjectScope {
 	project_scope: number | string;
@@ -24,17 +25,18 @@ function Step6() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
 	const project = useSelector((state: RootState) => state.project.project);
-	const [formData, setFormData] = useState<ProjectScope>({ project_scope: 0, project_duration: 0, project_experience: 0 });
+	const [formData, setFormData] = useState<ProjectScope>({ project_scope: 1, project_duration: 0, project_experience: 0 });
 	const [errors, setErrors] = useState<Partial<ProjectScope>>({});
 	const [scope, setScope] = useState<ScopeData[]>([]);
 	const [experiance, setExperiance] = useState<ScopeData[]>([]);
 	const [duration, setDuration] = useState<ScopeData[]>([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
 	
 	useEffect(() => {
 		if(project){
-			setFormData({...formData, project_scope: project.project_scope_id, project_duration: project.project_duration_id, project_experience: project.project_experience_id});
+			fetchProjectDetails(project.id);
+			// setFormData({...formData, project_scope: project.project_scope_id, project_duration: project.project_duration_id, project_experience: project.project_experience_id});
 		}
 	}, [project]);
 	
@@ -55,7 +57,10 @@ function Step6() {
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+					
+				setLoading(false);
+			}, 500);
 		}
 	};
 
@@ -71,6 +76,7 @@ function Step6() {
 		  [name]: undefined
 		});
 	};
+	formData.project_scope = 1;
 	// Validate the form
 	const validate = (): boolean => {
 		const newErrors: Partial<ProjectScope> = {};
@@ -111,14 +117,46 @@ function Step6() {
 		}
 	};
 
+	const fetchProjectDetails = async (id: number) => {
+		try {
+		  setLoading(true);
+	  
+		  // Ensure axiosInstance is properly configured
+		  const response = await axiosInstance.post("project/get-project-detail", { project_id: id });
+	  
+		  // Ensure response exists before proceeding
+		  if (!response || !response.data || !response.data.project) {
+			throw new Error("Invalid response structure");
+		  }
+	  
+		  const saved_data = response.data.project;
+	  
+		 
+		  setFormData((prev) => ({
+			...prev,
+			project_scope: saved_data.project_scope_id,
+			project_duration: saved_data.project_duration_id,
+			project_experience: saved_data.project_experience_id,
+		  }));
+		} catch (error) {
+		  console.error("Error fetching project details:", error);
+		} finally {
+			setTimeout(() => {
+					
+				setLoading(false);
+			}, 500);
+		}
+	  };
+	  
+
 	return (
+		<>
+		<Loader isLoading={loading} />
 		<Layout backButton={false} pagetitle="Estimate the scope of work" subtitle="Don’t stress! You can change this at any time." currentStep={6} issubmitting={submitting} getStarted={saveData}>
 			<div className="scope-work-form-items">
-				{loading ? (
-					<ContentLoader />
-				) : (
+				
 				<div className="scope-work-radio-items">
-				 <div className="sc-work-radio-boxs">
+				 {/* <div className="sc-work-radio-boxs">
 					<div className="work-titleBlock">
 					   <h3>What is the estimate size of the project?</h3>
 					</div>
@@ -157,7 +195,7 @@ function Step6() {
 						</div>
 						<span>{errors.project_scope}</span>
 					</div>
-				 </div>
+				 </div> */}
 				 <div className="sc-work-radio-boxs">
 					<div className="work-titleBlock">
 					   <h3>What is the estimated duration of your project?</h3>
@@ -237,9 +275,10 @@ function Step6() {
 					</div>
 				 </div>
 				  </div>
-				)}
+				
 		   </div>
 		</Layout>
+		</>
 	);
 }
 

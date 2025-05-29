@@ -74,7 +74,7 @@ const isPreviousStepAvailable =
 					<div className="acc-with-buttons">
 						{children}
 						<div className="back-continue-btns d-flex align-items-center view-btns-items justify-space-between">
-						{isPreviousStepAvailable && (<button type="button" className="backs-air-btn outline-border-btns" onClick={handlePreviousStep}>back</button>    )}
+						{isPreviousStepAvailable && (<button type="button" className="backs-air-btn outline-border-btns" onClick={handlePreviousStep}>Back</button>    )}
 							<button type="button" className="continue-air-btn bg-back-btns" onClick={getStarted}>
 								{!issubmitting ? 'Continue' : <ButtonLoader />}
 							</button>

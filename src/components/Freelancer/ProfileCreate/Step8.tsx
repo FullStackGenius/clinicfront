@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import Layout from './Layout';
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import Loader from '../../Common/Loader';
 
 function Step8() {
 	const navigate = useNavigate();
 	const [description, setDescription] = useState<string>('');
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string>('');
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	
 	useEffect(() => {
 		fetchPreData();
@@ -33,7 +34,9 @@ function Step8() {
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+				setLoading(false);
+			}, 500);
 		}
 	};
 	
@@ -86,6 +89,8 @@ function Step8() {
 		navigate("/freelancer/setup-profile-step-seven");;
 	};
   return (
+	<>
+		<Loader isLoading={loading} />
 		<Layout backButton={true} pagetitle="" currentStep={8} issubmitting={submitting} getStarted={saveData}>
 	        <div className="bio-content-section">
 			  <div className="bio-grid-container">
@@ -166,6 +171,7 @@ function Step8() {
 			  </div>
 		   </div>                   
 		</Layout>
+		</>
 	);
 }
 

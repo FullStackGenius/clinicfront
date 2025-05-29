@@ -6,6 +6,7 @@ import Footer from './layouts/partials/Footer';
 import ContentLoader from './Common/ContentLoader';
 import helpers from "../_helpers/common";
 import axiosInstance from "../_helpers/axiosInstance";
+import Loader from './Common/Loader';
 
 interface LearnHireType {
 	content: string;
@@ -38,6 +39,7 @@ function LearnToHire() {
 	};
   return (
     <>
+	 <Loader isLoading={loading} />
 	<Header />
 		<section className="learn-banner-section">
 			<div className="main-container">
@@ -55,9 +57,7 @@ function LearnToHire() {
 				   <p>Build relationships and create your own Virtual Talent Bench™ for quick project turnarounds or big transformations.</p>
 				</div>
 				<div className="learn-about-content">
-					{loading ? (
-						<ContentLoader />
-					) : (
+					
 						<div className="row align-items-center">
 							<div className="colm-6">
 								<div className="about-image">
@@ -68,7 +68,7 @@ function LearnToHire() {
 								<div className="hm-about-content">{parse(hiredata.content)}</div>
 							</div>
 						</div>
-					)}
+					
 				</div>
 			</div>
 		</section>

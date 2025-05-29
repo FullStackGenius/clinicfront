@@ -6,6 +6,7 @@ import helpers from "../../../_helpers/common";
 import ContentLoader from '../../Common/ContentLoader';
 import ButtonLoader from '../../Common/ButtonLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
+import Loader from "../../Common/Loader";
 
 
 interface ExperianceModalProps {
@@ -38,7 +39,7 @@ export const EditProjectExperianceModal: React.FC<ExperianceModalProps> = ({ id,
 	
 	const fetchProjectInfo = async () => {
 		try {
-			setLoading(true);
+			//setLoading(true);
 			const response: any = await axiosInstance({
 					url: 'get-scope-project-content',
 					method: "GET"
@@ -47,7 +48,7 @@ export const EditProjectExperianceModal: React.FC<ExperianceModalProps> = ({ id,
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			//setLoading(false);
 		}
 	};
 	
@@ -93,13 +94,12 @@ export const EditProjectExperianceModal: React.FC<ExperianceModalProps> = ({ id,
 	};
 	
 	return (
+		<>
+			<Loader isLoading={loading} />
 		<div id="pr-title-edit-popup" className="air-modal-popup" style={{ display: isOpen ? 'block' : 'none' }}>
          <div className="air-modal-items air-modal-import-resume-modal">
 				<div className="airModal-content">
-					{loading ? (
-						<ContentLoader />
-					) : (
-						<>
+					
 						<div className="airModal-header">
 							<h2 className="airModal-title h2">Edit Project Experiance</h2>
 							<button className="airModal-close" type="button" onClick={handleClose}>
@@ -115,7 +115,7 @@ export const EditProjectExperianceModal: React.FC<ExperianceModalProps> = ({ id,
 								   <h3>What level experience you need?</h3>
 								</div>
 								<div className="work-bg-colr">
-								   {experiance.length > 0 ? (
+								   {experiance && experiance.length > 0 ? (
 										<>
 										{experiance.map((item,index) => (
 											<div key={index} className="radio-check-box">
@@ -160,11 +160,11 @@ export const EditProjectExperianceModal: React.FC<ExperianceModalProps> = ({ id,
 								</button>
 							</div>
 						</div>
-						</>
-					)}	
+						
 				</div>
 			
          </div>
       </div>
+	  </>
 	);
 };

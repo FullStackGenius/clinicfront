@@ -20,6 +20,8 @@ import { EditProjectSizeModal } from '../UpdateProject/EditProjectSizeModal';
 import { EditProjectDurationModal } from '../UpdateProject/EditProjectDurationModal';
 import { EditProjectExperianceModal } from '../UpdateProject/EditProjectExperianceModal';
 
+import Loader from '../../Common/Loader';
+
 const MySwal = withReactContent(Swal);
 
 interface ProjectScope {
@@ -71,19 +73,21 @@ function Step7() {
 	const [sizemodal, setSizeModal] = useState(false);
 	const [durationmodal, setDurationModal] = useState(false);
 	const [experiencemodal, setExperienceModal] = useState(false);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
-	
+	const [stateChangeTrigger, setStateChangeTrigger] = useState(false);
 	
 	useEffect(() => {
 		if(project){
 			fetchProjectDetails(Number(project.id));
+		}else{
+			setLoading(false); 
 		}
-	}, [project]);
+	}, [project,titlemodal,descriptionmodal,skillmodal,sectormodal,certificationmodal,sizemodal,durationmodal,experiencemodal]);
 	
-	useEffect(() => {
-		//fetchProjectDetails(36);
-	}, []);
+	// useEffect(() => {
+	// 	//fetchProjectDetails(36);
+	// }, []);
 	
 	useEffect(() => {
 		if(loaddata){
@@ -91,31 +95,67 @@ function Step7() {
 				fetchProjectDetails(Number(project.id));
 			}
 		}
-	}, [loaddata]);
+	}, [loaddata,titlemodal,descriptionmodal,skillmodal,sectormodal,certificationmodal,sizemodal,durationmodal,experiencemodal]);
 	
+
 	const fetchProjectDetails = async (id: number) => {
+	
 		try {
-			setLoading(true);
-			const response: any = await axiosInstance({
-				url: 'project/get-project-detail',
-				method: "POST",
-				data: { project_id: id },
-			});
-			var saved_data = response.data.project;
-			//console.log('saved_data', saved_data)
-			setDuration({...duration, id: saved_data.project_duration.id, name: saved_data.project_duration.name})
-			setExperiance({...experiance, id: saved_data.project_experience.id, name: saved_data.project_experience.name})
-			setScope({...scope, id: saved_data.project_scope.id, name: saved_data.project_scope.name})
-			// Extracting and mapping the IDs from the response
-			setAccountingCertifications(response.data.project.accounting_certifications);
-			setAccountingSector(response.data.project.accounting_sectors);
-			setAccountingSkill(response.data.project.accounting_skills);
-			setProjectData({...projectData, id: saved_data.id, title: saved_data.title, description: saved_data.description, 
-							project_scope: saved_data.project_scope_id, project_duration: saved_data.project_duration_id, project_experience: saved_data.project_experience_id })
+			//setLoading(true);
+			if (!stateChangeTrigger) {
+				setLoading(true); // Show loader only on first load
+			}
+	
+			// Ensure axiosInstance is properly configured
+			const response = await axiosInstance.post("project/get-project-detail", { project_id: id });
+	
+			// Ensure response exists before proceeding
+			if (!response || !response.data || !response.data.project) {
+				throw new Error("Invalid response structure");
+			}
+	
+			const saved_data = response.data.project;
+			// console.log("saved_data", saved_data);
+	
+			// Update states using the previous state pattern
+			setDuration((prev) => ({
+				...prev,
+				id: saved_data.project_duration?.id,
+				name: saved_data.project_duration?.name,
+			}));
+	
+			setExperiance((prev) => ({
+				...prev,
+				id: saved_data.project_experience?.id,
+				name: saved_data.project_experience?.name,
+			}));
+	
+			setScope((prev) => ({
+				...prev,
+				id: saved_data.project_scope?.id,
+				name: saved_data.project_scope?.name,
+			}));
+	
+			setAccountingCertifications(saved_data.accounting_certifications || []);
+			setAccountingSector(saved_data.accounting_sectors || []);
+			setAccountingSkill(saved_data.accounting_skills || []);
+	
+			setProjectData((prev) => ({
+				...prev,
+				id: saved_data.id,
+				title: saved_data.title,
+				description: saved_data.description,
+				project_scope: saved_data.project_scope_id,
+				project_duration: saved_data.project_duration_id,
+				project_experience: saved_data.project_experience_id,
+			}));
 		} catch (error) {
-			console.error("Error in API request:", error);
+			console.error("Error fetching project details:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+				setStateChangeTrigger(true);
+				setLoading(false);
+			}, 500);
 		}
 	};
 	
@@ -135,9 +175,23 @@ function Step7() {
 					icon: 'success',
 					showCloseButton: true,
 					showConfirmButton: false,
-					showCancelButton: false
+					showCancelButton: false,
+					timer: 1500, // Closes after 2 seconds
 				});
+				navigate("/client/my-jobs");
 			}		
+			if(status === 2){
+				MySwal.fire({
+					title: `Success`,
+					text: 'Job save as draft',
+					icon: 'success',
+					showCloseButton: true,
+					showConfirmButton: false,
+					showCancelButton: false,
+					timer: 1500, // Closes after 2 seconds
+				});
+				navigate("/client/my-jobs");
+			}	
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
@@ -151,11 +205,7 @@ function Step7() {
 	
 	return (
 		<>
-		{loading && (
-			<div className="loader-wrapper-content">
-				<ContentLoader />
-			</div>
-		)}
+			<Loader isLoading={loading} />
 		<Header />
 		<section className="re-jobDetail-section light-bg-color">
          <div className="smallContainer">
@@ -166,15 +216,16 @@ function Step7() {
 				<div className="book-work-items">
 					<div className="d-flex align-items-center justify-space-between icon-title-wrapper">
 						<h4 className="mb-2h">{projectData.title}</h4>
-						<span className="edit_Link" onClick={() => setTitleModal(true)}>
+						<span className="edit_Link" onClick={() => setTitleModal(true) }>
 							<img className="img-fluid" src="/assets/images/edit-light-icon.svg" alt="" title="" />
 						</span>
 					</div>
 				</div>
 				<div className="text-work-block">
 					<div className="d-flex align-items-center justify-space-between icon-title-wrapper">
-						<p className="mp-2h">{projectData.description}</p>
-						<span className="edit_Link" onClick={() => setDescriptionModal(true)}>
+					<p className="mp-2h" dangerouslySetInnerHTML={{ __html: projectData.description }}></p>
+						{/* <p className="mp-2h">{projectData.description}</p> */}
+						<span className="edit_Link" onClick={() => setDescriptionModal(true) }>
 							<img className="img-fluid" src="/assets/images/edit-light-icon.svg" alt="" title="" />
 						</span>
 					</div>
@@ -183,11 +234,11 @@ function Step7() {
 					<div className="icon-title-wrapper">
 						<div className="title-text-boxs d-flex align-items-center justify-space-between">
 							<h4 className="mb-2h">Skills</h4>
-							<span className="edit_Link" onClick={() => setSkillModal(true)}>
+							<span className="edit_Link" onClick={() => setSkillModal(true) }>
 								<img className="img-fluid" src="/assets/images/edit-light-icon.svg" alt="" title=""/>
 							</span>
 						</div>
-						{accountingskill.length > 0 ? (
+						{accountingskill && accountingskill.length > 0 ? (
 							 <>
 								{accountingskill.map((item,index) => (
 									<p key={index} className="mp-2h">{item.name}</p>
@@ -204,7 +255,7 @@ function Step7() {
 								<img className="img-fluid" src="/assets/images/edit-light-icon.svg" alt="" title=""/>
 							</span>
 						</div>
-						{accountingsector.length > 0 ? (
+						{accountingsector && accountingsector.length > 0 ? (
 							 <>
 								{accountingsector.map((item,index) => (
 									<p key={index} className="mp-2h">{item.name}</p>
@@ -217,11 +268,11 @@ function Step7() {
 					<div className="icon-title-wrapper">
 						<div className="title-text-boxs d-flex align-items-center justify-space-between">
 							<h4 className="mb-2h">Certifications</h4>
-							<span className="edit_Link" onClick={() => setCertificationModal(true)}>
+							<span className="edit_Link" onClick={() => setCertificationModal(true) }>
 								<img className="img-fluid" src="/assets/images/edit-light-icon.svg" alt="" title=""/>
 							</span>
 						</div>
-						{accountingcertifications.length > 0 ? (
+						{accountingcertifications && accountingcertifications.length > 0 ? (
 							 <>
 								{accountingcertifications.map((item,index) => (
 									<p key={index} className="mp-2h">{item.name}</p>
@@ -231,19 +282,19 @@ function Step7() {
 							<p>No Certification Selected</p>
 						)}
 					</div>
-					<div className="icon-title-wrapper">
+				{ false && 	<div className="icon-title-wrapper">
 						<div className="title-text-boxs d-flex align-items-center justify-space-between">
 							<h4 className="mb-2h">Project Size</h4>
-							<span className="edit_Link" onClick={() => setSizeModal(true)}>
+							<span className="edit_Link" onClick={() => setSizeModal(true) }>
 								<img className="img-fluid" src="/assets/images/edit-light-icon.svg" alt="" title=""/>
 							</span>
 						</div>
 						<p className="mp-2h">{scope.name}</p>
-					</div>
+					</div> }
 					<div className="icon-title-wrapper">
 						<div className="title-text-boxs d-flex align-items-center justify-space-between">
 							<h4 className="mb-2h">Project Duration</h4>
-							<span className="edit_Link" onClick={() => setDurationModal(true)}>
+							<span className="edit_Link" onClick={() =>  setDurationModal(true) }>
 								<img className="img-fluid" src="/assets/images/edit-light-icon.svg" alt="" title=""/>
 							</span>
 						</div>
@@ -323,21 +374,21 @@ function Step7() {
 			</div>
 		</section>
 		{/*Edit Project Title Modal*/}
-		<EditTitleModal id={projectData.id} title={projectData.title} isOpen={titlemodal} onClose={() => setTitleModal(false)}/>
+		<EditTitleModal id={projectData.id} title={projectData.title} isOpen={titlemodal} onClose={() => setTimeout(() => setTitleModal(false), 200) }/>
 		{/*Edit Project Description Modal*/}
-		<EditDescriptionModal id={projectData.id} description={projectData.description} isOpen={descriptionmodal} onClose={() => setDescriptionModal(false)}/>
+		<EditDescriptionModal id={projectData.id} description={projectData.description} isOpen={descriptionmodal} onClose={() => setTimeout(() => setDescriptionModal(false), 200) }/>
 		{/*Edit Project Skill Modal*/}
-		<EditSkillModal id={projectData.id} isOpen={skillmodal} onClose={() => setSkillModal(false)}/>
+		<EditSkillModal id={projectData.id} isOpen={skillmodal} onClose={() => setTimeout(() => setSkillModal(false), 200) }/>
 		{/*Edit Project Sector Modal*/}
-		<EditSectorModal id={projectData.id} isOpen={sectormodal} onClose={() => setSectorModal(false)}/>
+		<EditSectorModal id={projectData.id} isOpen={sectormodal} onClose={() => setTimeout(() => setSectorModal(false), 200) }/>
 		{/*Edit Project Certification Modal*/}
-		<EditCertificationModal id={projectData.id} isOpen={certificationmodal} onClose={() => setCertificationModal(false)}/>
+		<EditCertificationModal id={projectData.id} isOpen={certificationmodal} onClose={() => setTimeout(() => setCertificationModal(false), 200) }/>
 		{/*Edit Project Size Modal*/}
-		<EditProjectSizeModal id={projectData.id} prescode={projectData.project_scope} isOpen={sizemodal} onClose={() => setSizeModal(false)}/>
+		<EditProjectSizeModal id={projectData.id} prescode={projectData.project_scope} isOpen={sizemodal} onClose={() => setTimeout(() => setSizeModal(false), 200) }/>
 		{/*Edit Project Duration Modal*/}
-		<EditProjectDurationModal id={projectData.id} prescode={projectData.project_duration} isOpen={durationmodal} onClose={() => setDurationModal(false)}/>
+		<EditProjectDurationModal id={projectData.id} prescode={projectData.project_duration} isOpen={durationmodal} onClose={() =>  setTimeout(() => setDurationModal(false), 200) }/>
 		{/*Edit Project Experiance Modal*/}
-		<EditProjectExperianceModal id={projectData.id} prescode={projectData.project_experience} isOpen={experiencemodal} onClose={() => setExperienceModal(false)}/>
+		<EditProjectExperianceModal id={projectData.id} prescode={projectData.project_experience} isOpen={experiencemodal} onClose={() => setTimeout(() => setExperienceModal(false), 200) }/>
 	</>
 	);
 }

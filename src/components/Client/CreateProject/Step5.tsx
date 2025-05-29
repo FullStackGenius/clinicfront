@@ -7,6 +7,7 @@ import Layout from './Layout';
 import ContentLoader from '../../Common/ContentLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import Loader from '../../Common/Loader';
 
 interface Budget {
 	budget_type: number;
@@ -26,14 +27,14 @@ function Step5() {
 	const [error, setError] = useState('');
 	const [fromerror, setFromError] = useState('');
 	const [toerror, setToError] = useState('');
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
 	
 	useEffect(() => {
 		if(project){
-			
-			let pre_budget_type = project.budget_type ? project.budget_type : 1;
-			setFormData({...formData, budget_type: pre_budget_type, hourly_from: project.hourly_from, hourly_to: project.hourly_to, fixed_rate: project.fixed_rate});
+			fetchProjectDetails(Number(project.id));
+			// let pre_budget_type = project.budget_type ? project.budget_type : 1;
+			// setFormData({...formData, budget_type: pre_budget_type, hourly_from: project.hourly_from, hourly_to: project.hourly_to, fixed_rate: project.fixed_rate});
 		}
 	}, [project]);
 
@@ -96,7 +97,46 @@ function Step5() {
 			}
 		}
 	};
+
+
+	const fetchProjectDetails = async (id: number) => {
+		try {
+		  // Fetch data from API
+		  setLoading(true);
+		  const response = await axiosInstance.post("project/get-project-detail", { project_id: id });
+	  
+		  // Ensure response exists before proceeding
+		  if (!response || !response.data || !response.data.project) {
+			throw new Error("Invalid response structure");
+		  }
+	  
+		  const saved_data = response.data.project;
+		 
+		 
+	  
+		  // Set form data using functional update pattern to avoid stale state issues
+		  setFormData((prev) => ({
+			...prev,
+			budget_type: saved_data.budget_type ?? 1, // Default to 1 if undefined/null
+			hourly_from: saved_data.hourly_from,
+			hourly_to: saved_data.hourly_to,
+			fixed_rate: saved_data.fixed_rate,
+		  }));
+		} catch (error) {
+		  console.error("Error fetching project details:", error);
+		}finally {
+			setTimeout(() => {
+				
+				setLoading(false);
+			}, 500);
+		}
+	  };
+
+	  
+
 	return (
+		<>
+		<Loader isLoading={loading} />
 		<Layout backButton={false} pagetitle="Tell us about your budget" currentStep={5} issubmitting={submitting} getStarted={saveData}>
 			<div className="budget-forms-items">
                   <div className="budget-radio-items">
@@ -147,7 +187,7 @@ function Step5() {
                                  <img className="img-fluid" src="/assets/images/fixed-rate-icon.svg" alt="" title="" />
                               </div>
                               <div className="air3-btn-box-label">
-                                 <h4>Fixed Rate</h4>
+                                 <h4>Fixed Price</h4>
                               </div>
                            </div>
                         </div>
@@ -172,10 +212,11 @@ function Step5() {
 										id="hourly_from" 
 										placeholder="$0.00" 
 										className="air3-input"
-										value={formData.hourly_from}
+										// value={(formData.hourly_from)?formData.hourly_from:""}
+										value={formData.hourly_from ? `$${formData.hourly_from}` : ""}
 										onChange={(e) => handleChange(e)}
 									/>
-									<span id="currency-hourly" className="sr-only">/hr</span>
+									<span id="currency-hourly" className="sr-only">total</span>
 								</div>
 								<div className="air-form-message form-message-error"
 								   style={{ display: fromerror !== '' ? 'flex' : 'none' }}
@@ -194,10 +235,11 @@ function Step5() {
 										id="hourly_to" 
 										placeholder="$0.00" 
 										className="air3-input"
-										value={formData.hourly_to}
+										// value={(formData.hourly_to)?formData.hourly_to:""}
+										value={formData.hourly_to ? `$${formData.hourly_to}` : ""}
 										onChange={(e) => handleChange(e)}
 									/>
-								  <span id="currency-hourly" className="sr-only">/hr</span>
+								  <span id="currency-hourly" className="sr-only">total</span>
 							   </div>
 								<div className="air-form-message form-message-error"
 								   style={{ display: toerror !== '' ? 'flex' : 'none' }}
@@ -219,10 +261,11 @@ function Step5() {
 										id="fixed_rate" 
 										placeholder="$0.00" 
 										className="air3-input"
-										value={formData.fixed_rate}
+										//value={(formData.fixed_rate)?formData.fixed_rate:""}
+										value={formData.fixed_rate ? `$${formData.fixed_rate}` : ""}
 										onChange={(e) => handleChange(e)}
 									/>
-									<span id="currency-hourly" className="sr-only">/hr</span>
+									<span id="currency-hourly" className="sr-only">total</span>
 								</div>
 							</div>
 						</div>
@@ -231,12 +274,13 @@ function Step5() {
                         <div className="bd-content-container">
                            <p>Please select your desired rate range.</p>
                            <p>Professionals range from <strong>$75 - $350</strong> hour USD for accounting projects depending on their expertise, certifications, and experience.</p>
-                           <div className="hour-rate-text">Not ready to set hourly rate? You can leave it blank and discuss with your talent.</div>
+                           {Number(formData.budget_type) === 1 && <div className="hour-rate-text">Not ready to set hourly rate? You can leave it blank and discuss with your talent.</div> }
                         </div>
                      </div>
                   </div>
                </div>
 		</Layout>
+		</>
 	);
 }
 

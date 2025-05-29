@@ -4,6 +4,7 @@ import Layout from './Layout';
 import { UploadResumeModal } from './UploadResumeModal'; 
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import Loader from '../../Common/Loader';
 
 interface Resume {
   id: number;
@@ -15,11 +16,11 @@ function Step1() {
 	const navigate = useNavigate();
 	const [resumemodal, setResumeModal] = useState<boolean>(false);
 	const [resume, setResume] = useState<Resume>({id: 0, resume_path: '', resume_url: ''});
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	
 	useEffect(() => {
 		fetchStepQuestions();
-	}, []);
+	}, [resumemodal]);
 	
 	const fetchStepQuestions = async () => {
 		try {
@@ -39,7 +40,9 @@ function Step1() {
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+                setLoading(false);
+            }, 500);
 		}
 	};
 	
@@ -53,6 +56,8 @@ function Step1() {
 	}
 	
 	return (
+		<>
+		<Loader isLoading={loading} />
 		<Layout backButton={false} pagetitle="Create your profile" currentStep={1} issubmitting={false} getStarted={saveData}>
 		   <div className="air-wiz-body">
 			  <div className="air-carousel-items">
@@ -95,7 +100,9 @@ function Step1() {
 							 <div className="bio-profile">
 								<img className="img-fluid" src="/assets/images/bio-image.png" alt="" title="" />
 							 </div>
-							 <blockquote className="h4">“Upwork has  enable me  to increase  my rates i know what i am bringing to the tablee and love the feeling of being able to help a veriety of clients. “</blockquote>
+							 <blockquote className="h4">"Accountant Clinic has given me the opportunity to finally make the
+income my schooling and
+certifications were for."</blockquote>
 						  </div>
 					   </div>
 					</div>
@@ -104,6 +111,7 @@ function Step1() {
 		   </div>		
 		<UploadResumeModal isOpen={resumemodal} onClose={() => setResumeModal(false)}  />
 	</Layout>
+	</>
 	);
 }
 

@@ -6,6 +6,7 @@ import helpers from "../../../_helpers/common";
 import ContentLoader from '../../Common/ContentLoader';
 import ButtonLoader from '../../Common/ButtonLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
+import Loader from "../../Common/Loader";
 
 
 interface SectorModalProps {
@@ -37,7 +38,7 @@ export const EditSectorModal: React.FC<SectorModalProps> = ({ id, isOpen, onClos
 	
 	const fetchProjectDetails = async (id: number) => {
 		try {
-			setLoading(true);
+			//setLoading(true);
 			const response: any = await axiosInstance({
 			  url: 'project/get-project-detail',
 			  method: "POST",
@@ -48,13 +49,13 @@ export const EditSectorModal: React.FC<SectorModalProps> = ({ id, isOpen, onClos
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			//setLoading(false);
 		}
 	};
 	
 	const fetchSectorData = async () => {
 		try {
-			setLoading(true);
+			//setLoading(true);
 			const response: any = await axiosInstance({
 					url: 'get-project-desired-account',
 					method: "GET"
@@ -63,7 +64,7 @@ export const EditSectorModal: React.FC<SectorModalProps> = ({ id, isOpen, onClos
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			//setLoading(false);
 		}
 	};
 	
@@ -124,13 +125,12 @@ export const EditSectorModal: React.FC<SectorModalProps> = ({ id, isOpen, onClos
 		return false;
 	}
 	return (
+		<>
+			<Loader isLoading={loading} />
 		<div id="pr-title-edit-popup" className="air-modal-popup" style={{ display: isOpen ? 'block' : 'none' }}>
          <div className="air-modal-items air-modal-import-resume-modal">
             <div className="airModal-content">
-			{loading ? (
-				<ContentLoader />
-			) : (
-				<>
+			
                <div className="airModal-header">
 					<h2 className="airModal-title h2">Edit Sector</h2>
 					<button className="airModal-close" type="button" onClick={handleClose}>
@@ -146,7 +146,7 @@ export const EditSectorModal: React.FC<SectorModalProps> = ({ id, isOpen, onClos
                         <div className="accordionPanel">
                            <div className="acc-skill-items">
                               <div className="skill-with-see">
-									{selectedsector.length > 0 ? (
+									{selectedsector && selectedsector.length > 0 ? (
 									 <ul className="d-flex flex-wrap align-items-center">
 										{selectedsector.map((item) => (
 											<li key={'skill'+item.id} className={`is-active`} onClick={() => selectUnselectSector(item)}>
@@ -207,10 +207,10 @@ export const EditSectorModal: React.FC<SectorModalProps> = ({ id, isOpen, onClos
 						</button>
 					</div>
 				</div>
-				</>
-			)}	
+				
             </div>
          </div>
       </div>
+	  </>
 	);
 };

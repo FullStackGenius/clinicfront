@@ -73,7 +73,7 @@ const ForgotPassword: React.FC = () => {
                </div>
                <div className="login-form">
                   <form className="register-form">
-                     <p className="form-row">
+                     <div className="form-row">
 						<label htmlFor="email">Email</label>
 						<input
 						  type="text"
@@ -93,7 +93,7 @@ const ForgotPassword: React.FC = () => {
 							</div>
 							<span>{errors.email}</span>
 						</div>
-					  </p>
+					  </div>
                      <p className="form-row form-btns">
                         <button type="button" className="login__submit" name="Reset password" onClick={() => handleSubmit()}>
 							{!issubmiting ? (

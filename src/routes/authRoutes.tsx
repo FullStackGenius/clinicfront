@@ -8,16 +8,21 @@ import ForgotPassword from "../components/Auth/ForgotPassword";
 import ForgotPasswordEmailSent from "../components/Auth/ForgotPasswordEmailSent";
 import ResetPassword from "../components/Auth/ResetPassword";
 import VerifyEmail from "../components/Auth/VerifyEmail";
+import ProtectAuthPages from '../components/ProtectAuthPages';
 
 const AuthRoutes = () => (
+  
   <>
-    <Route path='/sign-in' element={<Login />} />
-    <Route path='/verify-email' element={<VerifyEmail />} />
-    <Route path='/forgot-password' element={<ForgotPassword />} />
-    <Route path='/forgot-password-email-sent' element={<ForgotPasswordEmailSent />} />
-    <Route path="/reset-password/:token" element={<ResetPassword />} />
-    <Route path='/sign-up' element={<SignUp />} />
-    <Route path='/sign-up-as' element={<SignUpAs />} />
+
+
+    <Route path='/sign-in' element={ <ProtectAuthPages><Login /> </ProtectAuthPages>} />
+    <Route path='/verify-email' element={<ProtectAuthPages><VerifyEmail /></ProtectAuthPages>} />
+    <Route path='/forgot-password' element={<ProtectAuthPages><ForgotPassword /></ProtectAuthPages>} />
+    <Route path='/forgot-password-email-sent' element={<ProtectAuthPages><ForgotPasswordEmailSent /></ProtectAuthPages>} />
+    <Route path="/reset-password/:token" element={<ProtectAuthPages><ResetPassword /></ProtectAuthPages>} />
+    <Route path='/sign-up' element={<ProtectAuthPages><SignUp /></ProtectAuthPages>} />
+    <Route path='/sign-up-as' element={<ProtectAuthPages><SignUpAs /></ProtectAuthPages>} />
+   
   </>
 );
 

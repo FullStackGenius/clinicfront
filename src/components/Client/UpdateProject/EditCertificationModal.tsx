@@ -37,7 +37,7 @@ export const EditCertificationModal: React.FC<CertificationModalProps> = ({ id, 
 	
 	const fetchProjectDetails = async (id: number) => {
 		try {
-			setLoading(true);
+			//setLoading(true);
 			const response: any = await axiosInstance({
 			  url: 'project/get-project-detail',
 			  method: "POST",
@@ -48,13 +48,13 @@ export const EditCertificationModal: React.FC<CertificationModalProps> = ({ id, 
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			//setLoading(false);
 		}
 	};
 	
 	const fetchCertificationData = async () => {
 		try {
-			setLoading(true);
+			//setLoading(true);
 			const response: any = await axiosInstance({
 					url: 'get-project-desired-account',
 					method: "GET"
@@ -63,7 +63,7 @@ export const EditCertificationModal: React.FC<CertificationModalProps> = ({ id, 
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			//setLoading(false);
 		}
 	};
 	
@@ -127,10 +127,7 @@ export const EditCertificationModal: React.FC<CertificationModalProps> = ({ id, 
 		<div id="pr-title-edit-popup" className="air-modal-popup" style={{ display: isOpen ? 'block' : 'none' }}>
          <div className="air-modal-items air-modal-import-resume-modal">
             <div className="airModal-content">
-			{loading ? (
-				<ContentLoader />
-			) : (
-				<>
+			
 				<div className="airModal-header">
 					<h2 className="airModal-title h2">Edit Certification</h2>
 					<button className="airModal-close" type="button" onClick={handleClose}>
@@ -146,7 +143,7 @@ export const EditCertificationModal: React.FC<CertificationModalProps> = ({ id, 
                         <div className="accordionPanel">
                            <div className="acc-skill-items">
                               <div className="skill-with-see">
-									{selectedcertification.length > 0 ? (
+									{selectedcertification && selectedcertification.length > 0 ? (
 									 <ul className="d-flex flex-wrap align-items-center">
 										{selectedcertification.map((item) => (
 											<li key={'skill'+item.id} className={`is-active`} onClick={() => selectUnselect(item)}>
@@ -176,7 +173,7 @@ export const EditCertificationModal: React.FC<CertificationModalProps> = ({ id, 
                            <div className="accordionPanel">
                               <div className="acc-skill-items">
                                  <div className="skill-with-see">
-                                    {certifications.length > 0 ? (
+                                    {certifications && certifications.length > 0 ? (
 									 <ul className="d-flex flex-wrap align-items-center">
 										{certifications.map((item) => (
 											<>
@@ -207,8 +204,7 @@ export const EditCertificationModal: React.FC<CertificationModalProps> = ({ id, 
 						</button>
 					</div>
 				</div>
-				</>
-			)}
+			
             </div>
          </div>
       </div>

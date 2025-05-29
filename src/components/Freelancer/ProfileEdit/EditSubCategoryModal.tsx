@@ -177,14 +177,11 @@ export const EditSubCategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onC
 							<div className="categories-steps">
 				   <div className="air-categories-items desktop-items-display">
 						<div className="left d-flex flex-column">
-						{loading ? (
-							<ContentLoader />
-						):(
-							<>
+						
 							 <div className="tip-title">Select 1 category</div>
 							 <nav>
 								<ul className="cat air-list-nav">
-									{categories.map((item) => (
+									{categories && categories.map((item) => (
 										<li key={item.id} 
 										  className={`list-nav-item ${selectedcategory === item.id ? "active" : ""}`} onClick={() => setSelectedCategory(item.id)}
 										>
@@ -193,14 +190,13 @@ export const EditSubCategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onC
 								   ))}
 								</ul>
 							 </nav>
-							 </>
-						)}
+							
 						</div>
 						<div className="right d-flex flex-column">
 							<div className="tip-title">Now, select 1 to 3 specialties</div>
 							<div className="specialties-items">
 								<fieldset>
-								   {subcategories.map(subcat => (
+								   {subcategories && subcategories.map(subcat => (
 										<label key={subcat.id} className="air-checkbox-label">
 											<input type="checkbox" 
 											  className="air-checkbox-input" 
@@ -228,7 +224,7 @@ export const EditSubCategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onC
 									null
 								)}
 							</div>
-							{selectedsubcat.length > 0 ? (
+							{selectedsubcat && selectedsubcat.length > 0 ? (
 								<div className="clear-text d-flex align-items-center" onClick={() => setSelectedSubCat([])}>
 									<div className="air-icon">
 									   <img className="img-fluid" src="/assets/images/close-color-icon.svg" alt="" title="" />

@@ -4,6 +4,7 @@ import Layout from './Layout';
 import ButtonLoader from '../../Common/ButtonLoader'; 
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import Loader from '../../Common/Loader';
 
 function Step4() {
 	const navigate = useNavigate();
@@ -30,7 +31,9 @@ function Step4() {
 			} catch (error) {
 				console.error("Error in API request:", error);
 			} finally {
-				setLoading(false);
+				setTimeout(() => {
+					setLoading(false);
+				}, 500);
 			}
 		};
 
@@ -78,12 +81,14 @@ function Step4() {
 	}
 	
   return (
+	<>
+		<Loader isLoading={loading} />
     <Layout backButton={true} pagetitle="" currentStep={4} issubmitting={submitting} getStarted={saveData}>
 	    <div className="air-wiz-body">
 		  <div className="air-carousel-items">
 			 <div id="step-item-4" className="air-step-items">
 				<div className="step-title-container">
-				   <h2>Got it . Now, add a tittle to tell the world what you do </h2>
+				   <h2>Got it . Now, add a title to tell the world what you do </h2>
 				   <h5 className="step-subtitle">The let us know how much help to give you along the way.we wont share your answer with anyone else including potential clients.</h5>
 				</div>
 				<div className="profesional-role-items">
@@ -112,6 +117,7 @@ function Step4() {
 		  </div>
 		</div>         
 	</Layout>
+	</>
   );
 }
 

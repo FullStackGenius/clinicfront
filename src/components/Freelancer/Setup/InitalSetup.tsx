@@ -5,6 +5,7 @@ import ContentLoader from '../../Common/ContentLoader';
 import ButtonLoader from '../../Common/ButtonLoader'; 
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import Loader from '../../Common/Loader';
 
 interface StepQuestion {
   id: number;
@@ -106,6 +107,7 @@ function InitialSetup() {
 	//console.log('selectedOption', selectedOption)
   return (
     <>
+    	<Loader isLoading={loading} />
       <Header />
       <section className="quick-question-section">
         <div className="main-container">
@@ -133,9 +135,9 @@ function InitialSetup() {
                     Let us know how much help to give you along the way. We won’t share your answers with anyone else, including potential clients.
                   </p>
                 </div>
-                {!loading ? (
+               
                   <div className="quick-radio-btns">
-                    {questions.map((item) => (
+                    {questions && questions.map((item) => (
                       <div key={item.id} className="air3-radioBtn-box" onClick={() => setSelectedOption(item.id)}>
                         <input className="form-check-input"
                           type="radio"
@@ -169,9 +171,7 @@ function InitialSetup() {
                       </div>
                     ))}
                   </div>
-                ) : (
-                  <ContentLoader />
-                )}
+                
               </div>
               <div className="quik-button-container">
                 <div className="quik-left-btn">

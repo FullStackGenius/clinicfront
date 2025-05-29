@@ -5,11 +5,14 @@ import axios from 'axios';
 import ButtonLoader from '../Common/ButtonLoader';
 import AuthLayout from "../layouts/AuthLayout";
 import Header from '../layouts/partials/Header';
-
+import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2';
+const MySwal = withReactContent(Swal);
 
 function VerifyEmail() {
 	const location = useLocation();
 	const resend_email_link = location.state.resend_verify_email;
+	const getEmailAddress = location.state.getEmailAddress;
 	//const resend_email_link = '';
 	const [issending, setIsSending] = useState(false);
 	const [notrecivedemail, setNotRecivedEmail] = useState(false);
@@ -17,13 +20,29 @@ function VerifyEmail() {
 		setIsSending(true);
 		axios.get(resend_email_link)
 			.then((res) => {
+			///	console.log(res);
+				MySwal.fire({
+					text: res.data.message,
+					icon: 'success',
+					showCloseButton: true,
+					showConfirmButton: false,
+					showCancelButton: false
+				});
 				//console.log('resend email', res)
 				setIsSending(false);
-				toast.success(res.data.message, { duration: 9000, style: { minWidth: '250px' } });
+				// toast.success(res.data.message, { duration: 9000, style: { minWidth: '250px' } });
 			})
 			.catch((error) => {
+				MySwal.fire({
+					text: error.message,
+					icon: 'warning',
+					showCloseButton: true,
+					showConfirmButton: false,
+					showCancelButton: false
+				});
 				console.log('Get Google Profile Error', error)
-				toast.error(`Error : ${error.message}`, { duration: 9000, style: { minWidth: '250px' } });
+				setIsSending(false);
+				// toast.error(`Error : ${error.message}`, { duration: 9000, style: { minWidth: '250px' } });
 			});
 	};
 	
@@ -46,13 +65,13 @@ function VerifyEmail() {
 						  <img className="img-fluid" src="/assets/images/email-verify-img.svg" alt="" title=""/>
 					   </div>
 					   <h2>Verify your email to continue</h2>
-					   <p>You will just sent the address to <span>yourourallemail.com</span><br/>
+					   <p>You will just sent the address to <span>{ getEmailAddress }</span><br/>
 						  please check your email and select the link profile to verify your address
 					   </p>
 						<div className="send-again-btns">
 							<button onClick={() => resendEmail() }>
 								{!issending ? (
-									'Send Again'
+									'Send Verification Email'
 								) : (
 									<ButtonLoader />
 								)}

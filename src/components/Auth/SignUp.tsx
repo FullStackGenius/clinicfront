@@ -50,10 +50,19 @@ interface FormData {
 const SignUp: React.FC = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const role = location.state?.role;
-	console.log('role', role)
+	
+
+	const searchParams = new URLSearchParams(location.search);
+	let CheckRole:any ;
+	if(searchParams.get("role")){
+		 CheckRole = searchParams.get("role");
+	}else{
+		 CheckRole = location.state?.role;
+	}
+	const role = CheckRole;
+	// console.log(location);
 	//check if role exist from previous step otherwise redirect back to select role
-	if(!role) navigate('/sign-up-as');
+	
 	const [ user, setUser ] = useState<GoogleUser | null>(null);
     const [ profile, setProfile ] = useState<GoogleProfile | null>(null);
 	const [ formData, setFormData ] = useState<SignupFormState>({ first_name: '', last_name: '', email: '', password: '' });
@@ -119,7 +128,7 @@ const SignUp: React.FC = () => {
 				//check type and procced corespondingly
 				if(form_data.type === 'credential'){
 					//after successfull credential signup navigate verify email page
-					navigate('/verify-email', { state: {resend_verify_email: response.data.emailVerifyResendLink}})
+					navigate('/verify-email', { state: {resend_verify_email: response.data.emailVerifyResendLink,getEmailAddress:response.data.emailAddress}})
 				}else{
 					//after successfull social signup navigate verify details and procced corespondingly
 					localStorage.setItem('token', response.data.token);
@@ -196,6 +205,10 @@ const SignUp: React.FC = () => {
     /*Once user is retrived from google fetch user profile*/
     useEffect(
         () => {
+			if(!role) navigate('/sign-up-as');
+			if (Number(role) !== 2 && Number(role) !== 3) {
+				navigate('/sign-up-as');
+			  }
             if (user) {
                 axios
                     .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
@@ -264,7 +277,7 @@ const SignUp: React.FC = () => {
 				</div>
                <div className="login-form">
                   <form className="register-form" method="post">
-                     <p className="form-row form-row-first">
+                     <div className="form-row form-row-first">
                         <label htmlFor="first_name">First Name</label>
                         <input
 						  type="text"
@@ -284,8 +297,8 @@ const SignUp: React.FC = () => {
 							</div>
 							<span>{errors.first_name}</span>
 						</div>
-                     </p>
-                     <p className="form-row form-row-last">
+                     </div>
+                     <div className="form-row form-row-last">
                         <label htmlFor="last_name">Last Name</label>
                         <input
 						  type="text"
@@ -305,8 +318,8 @@ const SignUp: React.FC = () => {
 							</div>
 							<span>{errors.last_name}</span>
 						</div>
-                     </p>
-                     <p className="form-row">
+                     </div>
+                     <div className="form-row">
                         <label htmlFor="email">Email</label>
                         <input
 						  type="text"
@@ -326,8 +339,8 @@ const SignUp: React.FC = () => {
 							</div>
 							<span>{errors.email}</span>
 						</div>
-                     </p>
-                     <p className="form-row">
+                     </div>
+                     <div className="form-row">
                         <label htmlFor="password">Password</label>
                         <input
 						  className="form-control"
@@ -337,6 +350,7 @@ const SignUp: React.FC = () => {
 						  placeholder="Password"
 						  value={formData.password}
 						  onChange={handleInputChange}
+						   autoComplete="password"
 						/>
 						<div
 						  className="air-form-message form-message-error"
@@ -347,7 +361,7 @@ const SignUp: React.FC = () => {
 							</div>
 							<span>{errors.password}</span>
 						</div>
-                     </p>
+                     </div>
                      <p className="form-row form-btns">
 						<button
 						  type="button"
@@ -369,6 +383,7 @@ const SignUp: React.FC = () => {
                   </div>
                   <div className="have-account">
                      <p>Have an account? <Link to="/sign-in">Sign In</Link></p>
+					 <p>Back to <Link to="/">Home</Link></p>
                   </div>
                </div>
             </div>

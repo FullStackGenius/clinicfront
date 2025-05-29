@@ -31,35 +31,61 @@ const ResetPassword: React.FC = () => {
 	};
 	
 	/*Validate Form*/
+	// const validate = (): boolean => {
+	// 	//console.log('validate form data');
+	// 	const newErrors: Partial<ResetFormState> = {};
+	// 	if (!formData.password) {
+	// 		newErrors.password = 'Password is required';
+	// 	} 
+	// 	if (!formData.repassword) {
+	// 		newErrors.repassword = 'Re Password is required';
+	// 	} 
+	// 	if((formData.password !== '' && formData.repassword !== '') && formData.password !== formData.repassword){
+	// 		newErrors.repassword = 'Re entered password must be same as entered above';
+	// 	}
+	// 	setErrors(newErrors);
+	// 	return Object.keys(newErrors).length === 0;
+	// };
+
 	const validate = (): boolean => {
-		//console.log('validate form data');
 		const newErrors: Partial<ResetFormState> = {};
+	
+		// Password required
 		if (!formData.password) {
 			newErrors.password = 'Password is required';
-		} 
-		if (!formData.repassword) {
-			newErrors.repassword = 'Re Password is required';
-		} 
-		if((formData.password !== '' && formData.repassword !== '') && formData.password !== formData.repassword){
-			newErrors.repassword = 'Re entered password must be same as entered above';
+		} else {
+			// Password length and complexity
+			const passwordRegex = /^(?=.*[\d\W]).{8,}$/;
+			if (!passwordRegex.test(formData.password)) {
+				newErrors.password = 'Password must be at least 8 characters long and include at least 1 number or 1 symbol';
+			}
 		}
+	
+		// Repassword required
+		if (!formData.repassword) {
+			newErrors.repassword = 'Re-entered password is required';
+		} else if (formData.password !== formData.repassword) {
+			newErrors.repassword = 'Passwords do not match';
+		}
+	
 		setErrors(newErrors);
 		return Object.keys(newErrors).length === 0;
 	};
+	
 
 	/*Submit Form*/
 	const handleSubmit = async (): Promise<void> => {
 		if (validate()) {
 			setIsSubmiting(true);
 			try {
-				var form_data = {token: token, password: formData.password, repassword: formData.repassword}
+				var form_data = {token: token.token, password: formData.password, repassword: formData.repassword}
 				const response = await axiosInstance({
 					url: "change-forgot-password",
 					method: "POST",
 					data: form_data
 				});
 				//console.log('forgot password response', response);
-				navigate('/forgot-password-email-sent');
+				navigate('/sign-in');
 			} catch (error) {
 				console.error("Error in api request:", error);
 			} finally {

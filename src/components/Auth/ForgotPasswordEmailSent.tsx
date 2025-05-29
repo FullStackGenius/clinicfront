@@ -15,8 +15,9 @@ function ForgotPasswordEmailSent() {
 						  <img className="img-fluid" src="/assets/images/email-verify-img.svg" alt="" title="" />
 					   </div>
 					   <h2>Check your email</h2>
-					   <p>We’ve sent you an email with instructions to reset your password.<br/> Check your inbox and follow the steps there.</p>
-					   <p>If you didn’t request a password change or would like to<br/> log in to a different account, select "Return to login."</p>
+					   <p>We've sent you an email with instructions to reset your password.<br/> Please check your inbox and follow the steps provided.</p>
+					   <p>Changed your mind or using another account? Head back to “Login.”</p>
+					   {/* <p>If you didn’t request a password change or would like to<br/> log in to a different account, select "Return to login."</p> */}
 					   <div className="send-again-btns">
 						  <Link type="button" to="/sign-in" className="return-login-btn"> Return to login</Link>
 					   </div>

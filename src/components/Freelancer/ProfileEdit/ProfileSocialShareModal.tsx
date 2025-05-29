@@ -11,6 +11,7 @@ import {
   EmailShareButton,
   EmailIcon,
 } from 'react-share';
+import StylishXIcon from "../../StylishXIcon";
 
 
 interface ShareModalProps {
@@ -56,7 +57,7 @@ export const ProfileSocialShareModal: React.FC<ShareModalProps> = ({ url, title,
 
 					  {/* Twitter */}
 					  <TwitterShareButton url={shareUrl} title={shareTitle}>
-						<TwitterIcon size={40} round />
+						<StylishXIcon/>
 					  </TwitterShareButton>
 
 					  {/* LinkedIn */}

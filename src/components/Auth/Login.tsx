@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { googleLogout, useGoogleLogin, TokenResponse } from '@react-oauth/google';
 import { appleAuthHelpers } from 'react-apple-signin-auth';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../redux/store';
 import { setUserRedux } from '../../redux/userSlice';
@@ -12,6 +12,8 @@ import AuthLayout from "../layouts/AuthLayout";
 import helpers from "../../_helpers/common";
 import axios from 'axios';
 import axiosInstance from "../../_helpers/axiosInstance";
+import ContentLoader from '../Common/ContentLoader';
+import Loader from '../Common/Loader';
 
 const MySwal = withReactContent(Swal);
 
@@ -53,6 +55,7 @@ interface FormData {
 
 const Login: React.FC = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const dispatch = useDispatch<AppDispatch>();
 	const [ user, setUser ] = useState<GoogleUser | null>(null);
     const [ profile, setProfile ] = useState<GoogleProfile | null>(null);
@@ -60,6 +63,7 @@ const Login: React.FC = () => {
 	const [ logintype, setLoginType ] = useState('credential');
 	const [errors, setErrors] = useState<Partial<LoginFormState>>({});
 	const [issubmiting, setIsSubmiting] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	/*Handle Form Element Value Changed*/
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,11 +145,11 @@ const Login: React.FC = () => {
 								navigate('/');
 							}
 						}else{
-							navigate('/');
+							navigate('/client/create-project-step-one');
 						}
 					}
 				}else{
-					navigate('/verify-email', { state: {resend_verify_email: response.data.emailVerifyResendLink}})
+					navigate('/verify-email', { state: {resend_verify_email: response.data.emailVerifyResendLink,getEmailAddress:response.data.emailAddress}})
 				}
 			} catch (error) {
 				console.error("Error in api request:", error);
@@ -201,6 +205,34 @@ const Login: React.FC = () => {
 
     /*Once user is retrived from google fetch user profile*/
     useEffect(() => {
+
+		const params = new URLSearchParams(location.search);
+		if (params.get('verified') === '1') {
+		  // Show SweetAlert popup
+		  Swal.fire({
+			icon: 'success',
+			title: 'Email Verified',
+			html: '<strong>You have successfully verified your email ID.</strong>',
+			showCloseButton: true,
+			showConfirmButton: false,
+			timer: 2000,
+			timerProgressBar: true,
+		  });
+	
+		  // Clean the URL
+		  const newUrl = window.location.pathname;
+		  window.history.replaceState({}, document.title, newUrl);
+		}
+
+
+
+		setLoading(true); // Start loading
+	
+		const delay = setTimeout(() => {
+		  setLoading(false); // Stop loading after 2 seconds
+		}, 500);
+	
+		
 		if (user) {
 			axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
 					headers: {
@@ -223,7 +255,8 @@ const Login: React.FC = () => {
 					});
 				});
 		}
-    }, [ user ]);
+		return () => clearTimeout(delay); // Cleanup timeout on unmount
+    }, [ user,location ]);
 	
 	useEffect(() => {
 		if(profile){
@@ -246,8 +279,12 @@ const Login: React.FC = () => {
 		  console.error('Error performing apple signin.');
 		}*/
 	}
+
+	
 	
   return (
+	<>
+<Loader isLoading={loading} />
 	<AuthLayout>
 		<section className="customer-login">
 		  <div className="colm-6 form-colm">
@@ -273,7 +310,7 @@ const Login: React.FC = () => {
 			  </div>
 			  <div className="login-form">
 				<form className="register-form">
-				  <p className="form-row">
+				  <div className="form-row">
 					<label htmlFor="email">Email</label>
 					<input
 					  type="text"
@@ -283,6 +320,7 @@ const Login: React.FC = () => {
 					  placeholder="Email Address"
 					  value={formData.email}
 					  onChange={handleInputChange}
+					   autoComplete="email"
 					/>
 					<div
 					  className="air-form-message form-message-error"
@@ -293,8 +331,8 @@ const Login: React.FC = () => {
 						</div>
 						<span>{errors.email}</span>
 					</div>
-				  </p>
-				  <p className="form-row">
+				  </div>
+				  <div className="form-row">
 					<label htmlFor="password">Password</label>
 					<input
 					  className="form-control"
@@ -304,6 +342,7 @@ const Login: React.FC = () => {
 					  placeholder="Password"
 					  value={formData.password}
 					  onChange={handleInputChange}
+					   autoComplete="password"
 					/>
 					<div
 					  className="air-form-message form-message-error"
@@ -314,7 +353,7 @@ const Login: React.FC = () => {
 						</div>
 						<span>{errors.password}</span>
 					</div>
-				  </p>
+				  </div>
 				  <p className="forgot-password">
 					<Link to="/forgot-password">Forgot password?</Link>
 				  </p>
@@ -338,6 +377,9 @@ const Login: React.FC = () => {
 				  <p>
 					Don’t have an account? <Link to="/sign-up-as">Sign Up</Link>
 				  </p>
+				  <p>
+					Back to <Link to="/">Home</Link>
+				  </p>
 				</div>
 			  </div>
 			</div>
@@ -354,6 +396,9 @@ const Login: React.FC = () => {
 		  </div>
 		</section>
 	</AuthLayout>
+	
+	</>
+      
   );
 };
 

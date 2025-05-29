@@ -8,6 +8,7 @@ import ButtonLoader from '../../Common/ButtonLoader';
 import { AddExperianceModal } from './AddExperianceModal'; 
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import Loader from '../../Common/Loader';
 
 const MySwal = withReactContent(Swal);
 
@@ -44,7 +45,7 @@ function Step5() {
 		end_year: '',
 		description: ''
 	});
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	//const [deleteid, setDeleteId] = useState<number>(0);
 	const handleExperianceClick = () => {
 		setExperianceModal(true);
@@ -95,7 +96,9 @@ function Step5() {
 			} catch (error) {
 				console.error("Error in API request:", error);
 			} finally {
-				setLoading(false);
+				setTimeout(() => {
+					setLoading(false);
+				}, 500);
 			}
 		};
 	
@@ -145,18 +148,22 @@ function Step5() {
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			setTimeout(() => {
+                setLoading(false);
+            }, 500);
 		}
 	};
 
 	
 	return (
+		<>
+			<Loader isLoading={loading} />
 		<Layout backButton={true} pagetitle="" currentStep={5} issubmitting={false} getStarted={moveAhead}>
 			<div className="air-wiz-body">
 			  <div className="air-carousel-items">
 				 <div id="step-item-5" className="air-step-items">
 					<div className="step-title-container">
-					   <h2>Add your work experience here.</h2>
+					   <h2>Employment History</h2>
 					   <h5 className="step-subtitle">Give us a little about your history.</h5>
 					</div>
 					<div className="education-items">
@@ -178,7 +185,8 @@ function Step5() {
 												  </div>
 												  <div className="air-line-clamp-wrapper">
 													 <div className="air-content-info">
-														<span className="company-info">{experiance.company}</span> |  <span className="period-info">{experiance.start_month+'-'+experiance.start_year +'/'+experiance.end_month+'-'+experiance.end_year}</span>
+														<span className="company-info">{experiance.company}</span> |  <span className="period-info">{experiance.start_month+'-'+experiance.start_year }{(experiance?.end_month && experiance?.end_year) ? '/' + experiance.end_month + '-' + experiance.end_year : ''}
+														</span>
 													 </div>
 													 <div className="air-city-info">
 														<span className="city">{experiance.location},</span><span className="country">{experiance.country_name}</span>
@@ -223,6 +231,7 @@ function Step5() {
 			</div>
 			<AddExperianceModal selected={selectedrecord} isOpen={experiancemodal} onClose={() => setExperianceModal(false)}  />  
 		</Layout>
+		</>
 	);
 }
 

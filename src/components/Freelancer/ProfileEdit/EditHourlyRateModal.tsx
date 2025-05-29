@@ -16,7 +16,7 @@ type HourlyRateState = {
 };
 
 export const EditHourlyRateModal: React.FC<HourlyRateModal> = ({ isOpen, onClose }) => {
-	 const service_charge = 10; // 10% service charge
+	 const service_charge = 30; // 10% service charge
   const [formData, setFormData] = useState<HourlyRateState>({ hour_rate: '', service_rate: '', income: '' });
   const [errors, setErrors] = useState<Partial<HourlyRateState>>({});
   const [issubmiting, setSubmiting] = useState(false);

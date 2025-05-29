@@ -6,6 +6,7 @@ import helpers from "../../../_helpers/common";
 import ContentLoader from '../../Common/ContentLoader';
 import ButtonLoader from '../../Common/ButtonLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
+import Loader from "../../Common/Loader";
 
 
 interface SizeModalProps {
@@ -38,7 +39,7 @@ export const EditProjectSizeModal: React.FC<SizeModalProps> = ({ id, prescode, i
 	
 	const fetchProjectInfo = async () => {
 		try {
-			setLoading(true);
+		//	setLoading(true);
 			const response: any = await axiosInstance({
 					url: 'get-scope-project-content',
 					method: "GET"
@@ -47,7 +48,7 @@ export const EditProjectSizeModal: React.FC<SizeModalProps> = ({ id, prescode, i
 		} catch (error) {
 			console.error("Error in API request:", error);
 		} finally {
-			setLoading(false);
+			//setLoading(false);
 		}
 	};
 	
@@ -93,13 +94,12 @@ export const EditProjectSizeModal: React.FC<SizeModalProps> = ({ id, prescode, i
 	};
 	
 	return (
+		<>
+			<Loader isLoading={loading} />
 		<div id="pr-title-edit-popup" className="air-modal-popup" style={{ display: isOpen ? 'block' : 'none' }}>
          <div className="air-modal-items air-modal-import-resume-modal">
             <div className="airModal-content">
-				{loading ? (
-					<ContentLoader />
-				) : (
-					<>
+				
 						<div className="airModal-header">
 							<h2 className="airModal-title h2">Edit Project Size</h2>
 							<button className="airModal-close" type="button" onClick={handleClose}>
@@ -115,7 +115,7 @@ export const EditProjectSizeModal: React.FC<SizeModalProps> = ({ id, prescode, i
 								   <h3>What is the estimate size of the project?</h3>
 								</div>
 								<div className="work-bg-colr">
-								   {scope.length > 0 ? (
+								   {scope && scope.length > 0 ? (
 										<>
 										{scope.map((item,index) => (
 											<div key={index} className="radio-check-box">
@@ -160,10 +160,10 @@ export const EditProjectSizeModal: React.FC<SizeModalProps> = ({ id, prescode, i
 								</button>
 							</div>
 						</div>
-					</>
-				)}	
+					
             </div>
          </div>
       </div>
+	  </>
 	);
 };

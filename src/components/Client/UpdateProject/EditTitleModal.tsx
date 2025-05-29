@@ -21,10 +21,10 @@ export const EditTitleModal: React.FC<TitleModalProps> = ({ id, title, isOpen, o
 	const [submitting, setSubmitting] = useState(false);
 	
 	useEffect(() => {
-		if(isOpen){
-			setProjectTitle(String(title));
+		if (isOpen) {
+			setProjectTitle(title ? title : "");
 		}
-	}, [isOpen]);
+	}, [isOpen, title]);
 	
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {	
 		const { name, value } = e.target;
@@ -88,7 +88,8 @@ export const EditTitleModal: React.FC<TitleModalProps> = ({ id, title, isOpen, o
 								<label>Write a title for your job post</label>
 								<input className="form-control" type="text" 
 									placeholder="Seeking Super Great Accountant for Supplemental Book Work" 	
-									value={projecttitle}
+									// value={projecttitle}
+									value={projecttitle ?? ""} 
 									onChange={handleChange}
 								/>
 								<div className="air-form-message form-message-error"

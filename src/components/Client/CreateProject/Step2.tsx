@@ -8,6 +8,7 @@ import Layout from './Layout';
 import ContentLoader from '../../Common/ContentLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
+import Loader from '../../Common/Loader';
 
 
 function Step2() {
@@ -17,11 +18,15 @@ function Step2() {
 	const [projecttitle, setProjectTitle] = useState('');
 	const [error, setError] = useState<string>('');
 	const [submitting, setSubmitting] = useState(false);
-	
+	const [loading, setLoading] = useState(true);
 	useEffect(() => {
 		if(project && project.title){
-			setProjectTitle(String(project.title));
+			fetchProjectDetails(project.id);
+			//setProjectTitle(String(project.title));
 		}
+		setTimeout(() => {
+			setLoading(false);
+		}, 500);
 	}, [project]);
 	
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {	
@@ -37,6 +42,11 @@ function Step2() {
 		if (projecttitle === '') {
 			setError('Project title is required');
 			return false;
+		}
+		const validationResult = helpers.validateTitle(projecttitle);
+		if (validationResult !== true) {
+		  setError(validationResult);
+		  return false;
 		}
 		return true;
 	};
@@ -64,8 +74,34 @@ function Step2() {
 			}
 		}
 	};
+
+	const fetchProjectDetails = async (id: number) => {
+		try {
+		
+			setLoading(true);
+		  // Ensure axiosInstance is properly configured
+		  const response = await axiosInstance.post("project/get-project-detail", { project_id: id });
+	  
+		  // Ensure response exists before proceeding
+		  if (!response || !response.data || !response.data.project) {
+			throw new Error("Invalid response structure");
+		  }
+	  
+		  const saved_data = response.data.project;
+		  setProjectTitle(String(saved_data.title)); // Convert to string if necessary
+		} catch (error) {
+		  console.error("Error fetching project details:", error);
+		} finally {
+			setTimeout(() => {
+				setLoading(false);
+			}, 500);
+		}
+	  };
+	  
 	//console.log('projecttitle', projecttitle)
 	return (
+		<>
+			<Loader isLoading={loading} />
 		<Layout backButton={false} pagetitle="Give your job a strong title" subtitle="Don’t stress! You can change this at any time." currentStep={2} issubmitting={submitting} getStarted={saveData}>
 			<div className="job-postForms">
 			  <div className="job-forms-items">
@@ -94,6 +130,7 @@ function Step2() {
 			  </div>
 			</div>
 	</Layout>
+	</>
 	);
 }
 
