@@ -3351,3 +3351,5 @@ button.outline-border-btns, button.bg-back-btns, button.draft-air-btn, .profile-
     color: #FE6002;
     text-decoration: none;
 }
+.password-eye { position: relative;}
+.password-eye span { position: absolute; right: 20px; top: 0; bottom: 0; margin: auto; height: max-content; }

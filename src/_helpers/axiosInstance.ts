@@ -88,7 +88,7 @@ axiosInstance.interceptors.response.use(
 						//addError(firstErrorMessage, 'error');
 						//toast.error(`Error ${status}: ${firstErrorMessage}`, { duration: 9000, style: { minWidth: '250px' } });
 						MySwal.fire({
-							title: `Error ${status}`,
+							//title: `Error ${status}`,
 							text: firstErrorMessage,
 							icon: 'warning',
 							showCloseButton: true,
@@ -98,7 +98,7 @@ axiosInstance.interceptors.response.use(
 					} else {
 						//toast.error(`Error ${status}: ${message}`, { duration: 9000, style: { minWidth: '250px' } });
 						MySwal.fire({
-							title: `Error ${status}`,
+							//title: `Error ${status}`,
 							text: message,
 							icon: 'warning',
 							showCloseButton: true,
@@ -110,7 +110,7 @@ axiosInstance.interceptors.response.use(
 				} else {
 					//toast.error(`Error ${status}: ${message}`, { duration: 9000, style: { minWidth: '250px' } });
 					MySwal.fire({
-						title: `Error ${status}`,
+						//title: `Error ${status}`,
 						text: message,
 						icon: 'warning',
 						showCloseButton: true,

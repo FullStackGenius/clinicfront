@@ -278,7 +278,7 @@ const SignUp: React.FC = () => {
                <div className="login-form">
                   <form className="register-form" method="post">
                      <div className="form-row form-row-first">
-                        <label htmlFor="first_name">First Name</label>
+                        <label htmlFor="first_name">First Name<span style={{color: "red"}}>*</span></label>
                         <input
 						  type="text"
 						  name="first_name"
@@ -299,7 +299,7 @@ const SignUp: React.FC = () => {
 						</div>
                      </div>
                      <div className="form-row form-row-last">
-                        <label htmlFor="last_name">Last Name</label>
+                        <label htmlFor="last_name">Last Name<span style={{color: "red"}}>*</span></label>
                         <input
 						  type="text"
 						  name="last_name"
@@ -320,7 +320,7 @@ const SignUp: React.FC = () => {
 						</div>
                      </div>
                      <div className="form-row">
-                        <label htmlFor="email">Email</label>
+                        <label htmlFor="email">Email<span style={{color: "red"}}>*</span></label>
                         <input
 						  type="text"
 						  name="email"
@@ -341,7 +341,7 @@ const SignUp: React.FC = () => {
 						</div>
                      </div>
                      <div className="form-row">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">Password<span style={{color: "red"}}>*</span></label>
                         <input
 						  className="form-control"
 						  type="password"

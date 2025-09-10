@@ -64,7 +64,7 @@ const Login: React.FC = () => {
 	const [errors, setErrors] = useState<Partial<LoginFormState>>({});
 	const [issubmiting, setIsSubmiting] = useState(false);
 	const [loading, setLoading] = useState(true);
-
+ const [showPassword, setShowPassword] = useState(false);
 	/*Handle Form Element Value Changed*/
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		//console.log('handle input change called')
@@ -311,7 +311,7 @@ const Login: React.FC = () => {
 			  <div className="login-form">
 				<form className="register-form">
 				  <div className="form-row">
-					<label htmlFor="email">Email</label>
+					<label htmlFor="email">Email<span style={{color: "red"}}>*</span></label>
 					<input
 					  type="text"
 					  name="email"
@@ -333,10 +333,13 @@ const Login: React.FC = () => {
 					</div>
 				  </div>
 				  <div className="form-row">
-					<label htmlFor="password">Password</label>
+					
+					<label htmlFor="password">Password<span style={{color: "red"}}>*</span></label>
+					<div className="password-eye">
 					<input
 					  className="form-control"
-					  type="password"
+					   type={showPassword ? "text" : "password"}
+					 // type="password"
 					  name="password"
 					  id="password"
 					  placeholder="Password"
@@ -344,6 +347,26 @@ const Login: React.FC = () => {
 					  onChange={handleInputChange}
 					   autoComplete="password"
 					/>
+
+					<span
+          onClick={() => setShowPassword(!showPassword)}
+        
+        >
+          {showPassword ? (
+            <img
+              src="/assets/images/eye.svg"
+              alt="Hide password"
+              width={20}
+            />
+          ) : (
+            <img
+              src="/assets/images/eye-off.svg"
+              alt="Show password"
+              width={20}
+            />
+          )}
+        </span>
+		</div>
 					<div
 					  className="air-form-message form-message-error"
 					  style={{ display: errors.password ? 'flex' : 'none' }}

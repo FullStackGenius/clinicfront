@@ -45,7 +45,7 @@ let echoInstance: Echo<any> | null = null;
 const originalUrl = process.env.REACT_APP_ENDPOINT || '';
 const cleanedUrl = originalUrl.replace(/\/api$/, '');
 
-console.log(cleanedUrl); 
+//console.log(cleanedUrl); 
 export const initializeEcho = (token: string): Echo<any> => {
   if (!echoInstance) {
     echoInstance = new Echo({
