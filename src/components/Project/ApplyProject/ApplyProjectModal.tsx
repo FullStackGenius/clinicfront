@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { setLoadData } from "../../../redux/commonSlice";
 import type { AppDispatch } from '../../../redux/store';
-import helpers from "../../../_helpers/common";
 import ButtonLoader from '../../Common/ButtonLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
 import withReactContent from "sweetalert2-react-content";
@@ -22,24 +21,17 @@ export const ApplyProjectModal: React.FC<TitleModalProps> = ({ id, isOpen, onClo
     const dispatch = useDispatch<AppDispatch>();
     const [bidAmount, setBidAmount] = useState('');
     const [coverLetter, setCoverLetter] = useState('');
-    const [error, setError] = useState<string>('');
     const [errorCoverLetter, setErrorCoverLetter] = useState<string>('');
     const [submitting, setSubmitting] = useState(false);
 
-
-
     const validateForm = (): boolean => {
         let isValid = true;
-
-
-
         if (!coverLetter.trim()) {
             setErrorCoverLetter('Application Notes is required');
             isValid = false;
         } else {
             setErrorCoverLetter(''); // ✅ Hide error once filled
         }
-
         return isValid;
     };
 
@@ -51,7 +43,6 @@ export const ApplyProjectModal: React.FC<TitleModalProps> = ({ id, isOpen, onClo
             setErrorCoverLetter(''); // ✅ Hide error when value is entered
         }
     };
-
     // ✅ Save data function
     const saveData = async (): Promise<void> => {
         if (!validateForm()) return; // Stop if validation fails
@@ -63,9 +54,6 @@ export const ApplyProjectModal: React.FC<TitleModalProps> = ({ id, isOpen, onClo
                 method: "POST",
                 data: { project_id: id, bid_amount: bidAmount, cover_letter: coverLetter }
             });
-
-
-
             if (response.error === 'false') {
                 dispatch(setLoadData(true));
                 onClose();
@@ -84,7 +72,6 @@ export const ApplyProjectModal: React.FC<TitleModalProps> = ({ id, isOpen, onClo
             setSubmitting(false);
         }
     };
-
 
     const handleClose = (e: React.MouseEvent) => {
         onClose();

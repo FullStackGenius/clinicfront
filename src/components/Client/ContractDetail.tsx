@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import AuthLayout from '../layouts/AuthLayout'
 import Header from '../layouts/partials/Header'
 import Footer from '../layouts/partials/Footer'
 import axiosInstance from '../../_helpers/axiosInstance';
 import helpers from '../../_helpers/common';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import ContentLoader from '../Common/ContentLoader';
-import withReactContent from 'sweetalert2-react-content';
-import Swal from 'sweetalert2';
+import { useNavigate, useParams } from 'react-router-dom';
 import ContractQverviewComponent from '../Common/ContractQverviewComponent';
 import ContractDetailComponent from '../Common/ContractDetailComponent';
 import Loader from '../Common/Loader';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-const MySwal = withReactContent(Swal);
+
 
 interface User {
     id: number;
@@ -49,15 +46,15 @@ interface MilestonePayment {
     transferred_at: string;
     created_at: string;
     updated_at: string;
-  }
+}
 interface Milestone {
     id: number;
     contract_id: number;
     title: string;
     description: string;
-    amount: string; 
+    amount: string;
     completion_percentage: string;
-    status: "pending" | "completed" | "paid"; 
+    status: "pending" | "completed" | "paid";
     milestone_payments: MilestonePayment[];
 }
 interface ContractPaymentDetail {
@@ -70,37 +67,37 @@ function ContractDetail() {
     const segment = useParams();
     const [segmentId, setSegmentId] = useState<string | number | undefined>('');
     const [contractData, setContractData] = useState<Contract | null>(null);
-    const [contractMilestone, setContractMilestone] = useState<Milestone []>([]);
-    const [contractPaymentDetail, setContractPaymentDetail] = useState<ContractPaymentDetail |null >(null);
+    const [contractMilestone, setContractMilestone] = useState<Milestone[]>([]);
+    const [contractPaymentDetail, setContractPaymentDetail] = useState<ContractPaymentDetail | null>(null);
     const [activeTab, setActiveTab] = useState("overview");
     const [refreshKey, setRefreshKey] = useState<number>(0);
     const user = useSelector((state: RootState) => state.user.user);
-   
+
 
     const tabs = ['overview', 'contract details'];
 
     const navigate = useNavigate();
-    
+
     useEffect(() => {
         fetchContractDetail();
-    }, [activeTab,refreshKey]);
+    }, [activeTab, refreshKey]);
 
     const fetchContractDetail = async () => {
         setLoading(true);
         try {
-        
+
             const response: any = await axiosInstance({
                 url: 'jobs/get-contract-details',
                 method: "POST",
                 params: { contract_id: segment.contract_id }
 
             });
-           
+
             if (response.error === "false") {
-               //console.log(response);
+                //console.log(response);
                 setContractData(response.data.contract)
                 setContractMilestone(response.data.milestones);
-              
+
                 setContractPaymentDetail(response.data.contractPaymentDetail)
             }
         } catch (error) {
@@ -109,7 +106,7 @@ function ContractDetail() {
             setTimeout(() => {
                 setLoading(false);
             }, 300);
-          
+
         }
     };
 
@@ -125,7 +122,7 @@ function ContractDetail() {
 
     const handleRefresh = () => {
         setRefreshKey(prev => prev + 1); // increment to trigger rerender
-      };
+    };
 
     return (
         <>
@@ -162,18 +159,6 @@ function ContractDetail() {
 
                                     <div className="qa-tabs-header">
                                         <div className="qa-tabs-horizontal">
-                                            {/* <ul>
-                                                <li className="qa-tab-list-item is-active">
-                                                    <button className="qa-tab-btn" id="overview-tab">Overview</button>
-                                                </li>
-                                                <li className="qa-tab-list-item">
-                                                    <button className="qa-tab-btn" id="messages-tab">Messages</button>
-                                                </li>
-                                                <li className="qa-tab-list-item">
-                                                    <button className="qa-tab-btn" id="details-tab">Contract details</button>
-                                                </li>
-                                            </ul> */}
-
                                             <ul>
                                                 {tabs.map((tab) => (
                                                     <li
@@ -184,14 +169,14 @@ function ContractDetail() {
                                                         <button className="qa-tab-btn" id="overview-tab">{helpers.toTitleCase(tab)}</button>
                                                     </li>
                                                 ))}
-                                                { user && user.role_id==2 ?(<> <li className="qa-tab-list-item">
+                                                {user && user.role_id == 2 ? (<> <li className="qa-tab-list-item">
                                                     <button className="qa-tab-btn" id="details-tab" onClick={() => navigate(`/chat/${contractData?.freelancer.id}/${contractData?.id}`)}>Messages</button>
-                                                </li></>):(<>
+                                                </li></>) : (<>
                                                     <li className="qa-tab-list-item">
-                                                    <button className="qa-tab-btn" id="details-tab" onClick={() => navigate(`/chat/${contractData?.client.id}/${contractData?.id}`)}>Messages</button>
-                                                </li>
+                                                        <button className="qa-tab-btn" id="details-tab" onClick={() => navigate(`/chat/${contractData?.client.id}/${contractData?.id}`)}>Messages</button>
+                                                    </li>
                                                 </>)}
-                                               
+
                                             </ul>
                                         </div>
                                     </div>
@@ -201,7 +186,7 @@ function ContractDetail() {
                                 </div>
                             </div>
                             {activeTab === "overview" && <>
-                                {contractData && <ContractQverviewComponent contractMilestone={contractMilestone} contractData={contractData} contractPaymentDetail={contractPaymentDetail}  onFormSubmit={handleRefresh} />}
+                                {contractData && <ContractQverviewComponent contractMilestone={contractMilestone} contractData={contractData} contractPaymentDetail={contractPaymentDetail} onFormSubmit={handleRefresh} />}
 
 
                             </>}

@@ -1,5 +1,3 @@
-// ContractPayment.tsx
-
 import { useEffect, useState } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import axiosInstance from '../../_helpers/axiosInstance';
@@ -144,39 +142,7 @@ const ContractPayment: React.FC<ContractPaymentProps> = ({ amount, contractId, c
     }
   };
 
-  // const handlePayment = async () => {
-  //   setSubmitting(true)
-  //   const card = elements?.getElement(CardElement);
-  //   if (!card || !stripe) return;
 
-  //   const result = await stripe.confirmCardPayment(clientSecret, {
-  //     payment_method: {
-  //       card,
-  //     },
-  //   });
-
-
-
-  //   if (result.paymentIntent?.status === 'succeeded') {
-  //     storePaymentDetail(result);
-  //     MySwal.fire({
-  //       title: 'Success',
-  //       text: 'Contract has been successfully funded',
-  //       icon: 'success',
-  //       showCloseButton: true,
-  //       showConfirmButton: false,
-  //       showCancelButton: false,
-  //       timer: 1500, // 1.5 seconds
-  //     }).then((swalResult) => {
-  //       if (swalResult.dismiss === Swal.DismissReason.timer) {
-  //         navigate(`/client/contracts-details/${contractId}`);
-  //       }
-  //     });
-
-  //   } else {
-  //     alert('Payment failed');
-  //   }
-  // };
 
   const handlePayment = async () => {
     try {
@@ -302,21 +268,7 @@ const ContractPayment: React.FC<ContractPaymentProps> = ({ amount, contractId, c
         </div>
 
         <div className="card-element-wrapper">
-          {/* <CardElement options={{
-             hidePostalCode: true,
-            style: {
-              base: {
-                fontSize: "16px",
-                color: "#32325d",
-                '::placeholder': {
-                  color: "#aab7c4"
-                }
-              },
-              invalid: {
-                color: "#fa755a"
-              }
-            }
-          }} /> */}
+
 
           <CardElement
             options={{

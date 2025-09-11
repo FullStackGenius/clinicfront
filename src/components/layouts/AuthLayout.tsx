@@ -14,7 +14,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
         const loggedIn = checkUserLoggedIn();
 		if(loggedIn){
 			let role = getUserInfo('role_name');
-			//console.log('role', role)
 			if(!role){
 				navigate('/sign-up-as');
 			}

@@ -1,20 +1,18 @@
-import React from 'react'
 interface PaginationProps {
-    lastPage: number;
-    currentPage: number;
-    handlePageChange: (page: number) => void;
-    getPagination: () => (number | string)[];
-  }
-  
-const ResourcePaginationHtml = (props:PaginationProps ) => {
-    const {lastPage,currentPage,handlePageChange,getPagination} = props;
+  lastPage: number;
+  currentPage: number;
+  handlePageChange: (page: number) => void;
+  getPagination: () => (number | string)[];
+}
+
+const ResourcePaginationHtml = (props: PaginationProps) => {
+  const { lastPage, currentPage, handlePageChange, getPagination } = props;
   return (
     <div className="blog-pagination">
       <div className="b-pagination-outer">
         <ul id="border-pagination">
           <li className="leftPrev">
             <a
-            //   to={currentPage === 1 ? "#" : `?page=${currentPage - 1}`}
               onClick={(e) => {
                 if (currentPage === 1) {
                   e.preventDefault();
@@ -29,22 +27,22 @@ const ResourcePaginationHtml = (props:PaginationProps ) => {
           </li>
 
           {getPagination().map((page, index) => (
-          <li key={index}>
-            {page === "..." ? (
-              <span className="dots">...</span>
-            ) : (
-              <a
-                className={currentPage === page ? "active" : ""}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(Number(page));
-                }}
-              >
-                {page}
-              </a>
-            )}
-          </li>
-        ))}
+            <li key={index}>
+              {page === "..." ? (
+                <span className="dots">...</span>
+              ) : (
+                <a
+                  className={currentPage === page ? "active" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePageChange(Number(page));
+                  }}
+                >
+                  {page}
+                </a>
+              )}
+            </li>
+          ))}
 
           <li className="RightPrev">
             <a
@@ -62,7 +60,7 @@ const ResourcePaginationHtml = (props:PaginationProps ) => {
           </li>
         </ul>
       </div>
-      </div>
+    </div>
   )
 }
 

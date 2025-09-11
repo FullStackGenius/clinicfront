@@ -1,5 +1,3 @@
-// src/routes/authRoutes.tsx
-import React from 'react';
 import { Route } from 'react-router-dom';
 import Login from "../components/Auth/Login";
 import SignUp from "../components/Auth/SignUp";
@@ -11,18 +9,16 @@ import VerifyEmail from "../components/Auth/VerifyEmail";
 import ProtectAuthPages from '../components/ProtectAuthPages';
 
 const AuthRoutes = () => (
-  
+
   <>
-
-
-    <Route path='/sign-in' element={ <ProtectAuthPages><Login /> </ProtectAuthPages>} />
+    <Route path='/sign-in' element={<ProtectAuthPages><Login /> </ProtectAuthPages>} />
     <Route path='/verify-email' element={<ProtectAuthPages><VerifyEmail /></ProtectAuthPages>} />
     <Route path='/forgot-password' element={<ProtectAuthPages><ForgotPassword /></ProtectAuthPages>} />
     <Route path='/forgot-password-email-sent' element={<ProtectAuthPages><ForgotPasswordEmailSent /></ProtectAuthPages>} />
     <Route path="/reset-password/:token" element={<ProtectAuthPages><ResetPassword /></ProtectAuthPages>} />
     <Route path='/sign-up' element={<ProtectAuthPages><SignUp /></ProtectAuthPages>} />
     <Route path='/sign-up-as' element={<ProtectAuthPages><SignUpAs /></ProtectAuthPages>} />
-   
+
   </>
 );
 

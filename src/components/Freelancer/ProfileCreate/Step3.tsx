@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import Layout from './Layout';
-import ContentLoader from '../../Common/ContentLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
 import helpers from "../../../_helpers/common";
 import Loader from '../../Common/Loader';
@@ -37,7 +36,6 @@ function Step3() {
 				url: 'get-skills',
 				method: "GET"
 			});
-			//console.log('response', response)
 			setSkills(response.data.skills);
 
 			var popular_skills = response.data.skills.length > 8 ? response.data.skills.slice(0, 8) : response.data.skills;
@@ -61,7 +59,6 @@ function Step3() {
 					method: "POST",
 					data: { name: 'step3' }
 				});
-				//console.log('get-user-step-data step 3', response)
 				var saved_skills = response.data.details.skills;
 				if (saved_skills && saved_skills.length > 0) {
 					setSelectedSkill(saved_skills);
@@ -79,16 +76,13 @@ function Step3() {
 	}, []);
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		//console.log('handle input change called')
 		const { name, value } = e.target;
-		//clean the value
 		let clean_val = helpers.cleanString(value);
 		setSearch(clean_val);
 		searchSkill(clean_val);
 	};
 
 	const searchSkill = (term: string) => {
-		//console.log('term', term)
 		if (term !== '') {
 			const filterBy = () => {
 				const searchTerms = new RegExp(term, 'i');
@@ -143,8 +137,6 @@ function Step3() {
 					method: "POST",
 					data: { skills: result }
 				});
-				//console.log('response', response)
-
 				if (response.error === 'false') {
 					navigate("/freelancer/setup-profile-step-four");
 				}
@@ -235,15 +227,6 @@ function Step3() {
 									<div className="suggest-skills-items">
 										<p className="token-label">popular Skills</p>
 										<div className="token-container-label">
-											{/* {popularskills.map((item,index) => (
-									<div key={index} role="button" className="air-token air-token-multi-select" onClick={() => handleSkillSelected(item)}>
-									{item.name}
-									   <div className="air3-icon">
-										  <img className="img-fluid" src="/assets/images/plus-black-icon.svg" alt="" title=""/>
-									   </div>
-									</div>
-								))} */}
-
 											{popularskills
 												.filter(item => !selectedskills.some(skill => skill.id === item.id))
 												.map((item, index) => (
@@ -264,10 +247,6 @@ function Step3() {
 														</div>
 													</div>
 												))}
-
-
-										
-
 										</div>
 									</div>
 								</div>

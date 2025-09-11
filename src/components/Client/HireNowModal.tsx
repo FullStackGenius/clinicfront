@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch } from 'react-redux';
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
@@ -34,7 +34,7 @@ interface ProposalData {
 }
 
 
-export const HireNowModal: React.FC<TitleModalProps> = ({ onJobAppliedHired,id, isOpen, onClose }) => {
+export const HireNowModal: React.FC<TitleModalProps> = ({ onJobAppliedHired, id, isOpen, onClose }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const segment = useParams();
@@ -130,7 +130,7 @@ export const HireNowModal: React.FC<TitleModalProps> = ({ onJobAppliedHired,id, 
         if (!projectStartDate) {
             tempErrors.projectStartDate = "Project Start Date is required.";
         }
-        
+
         if (!projectEndDate) {
             tempErrors.projectEndDate = "Project End Date is required.";
         } else if (projectStartDate && new Date(projectEndDate) < new Date(projectStartDate)) {
@@ -138,14 +138,6 @@ export const HireNowModal: React.FC<TitleModalProps> = ({ onJobAppliedHired,id, 
         } else if (new Date(projectEndDate) > new Date('2099-12-31')) {
             tempErrors.projectEndDate = "Project End Date must be valid.";
         }
-        // if (!projectStartDate) {
-        //     tempErrors.projectStartDate = "Project Start Date is required.";
-        // }
-        // if (!projectEndDate) {
-        //     tempErrors.projectEndDate = "Project End Date is required.";
-        // } else if (projectStartDate && new Date(projectStartDate) > new Date(projectEndDate)) {
-        //     tempErrors.projectEndDate = "End Date must be after Start Date.";
-        // }
         if (!contractType) {
             tempErrors.contractType = "Contract Type is required.";
         }
@@ -163,7 +155,6 @@ export const HireNowModal: React.FC<TitleModalProps> = ({ onJobAppliedHired,id, 
         }
         setErrors(tempErrors);
         const hasErrors = Object.keys(tempErrors).length > 0;
-       // return hasErrors; // remove this line for milestone validation
         // undo below code for milestone validation
         const otherCondition = handleSubmit(); // Replace with actual condition
         return !(hasErrors || !otherCondition);
@@ -171,7 +162,6 @@ export const HireNowModal: React.FC<TitleModalProps> = ({ onJobAppliedHired,id, 
 
 
     const saveData = async (): Promise<void> => {
-        // if (validate()) return;
         if (!validate()) return;
         try {
             setSubmitting(true);
@@ -195,11 +185,6 @@ export const HireNowModal: React.FC<TitleModalProps> = ({ onJobAppliedHired,id, 
                 onClose();
                 resetForm();
                 onJobAppliedHired();
-                // Swal.fire({
-                //     title: "Proposal responsed successfully",
-                //     icon: "success",
-                //     confirmButtonText: "OK",
-                // });
                 setMilestones([{ title: "", amount: "", description: "" }]);
                 setMilestoneErrors([{ title: "", amount: "", description: "" }]);
                 setTotalAmountError("");
@@ -213,7 +198,7 @@ export const HireNowModal: React.FC<TitleModalProps> = ({ onJobAppliedHired,id, 
             setTotalAmountError("");
             onClose();
             resetForm();
-           
+
         } finally {
             setSubmitting(false);
         }
@@ -235,10 +220,9 @@ export const HireNowModal: React.FC<TitleModalProps> = ({ onJobAppliedHired,id, 
         onClose();
     };
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-       
+
         const value = e.target.value.replace(/[^0-9.]/g, ""); // Allow only numbers and decimals
         setProjectAmount(Number(value))
-        // console.log(value)
     };
 
     return (
@@ -257,182 +241,177 @@ export const HireNowModal: React.FC<TitleModalProps> = ({ onJobAppliedHired,id, 
                         <div className="modal-resume-content">
                             <div className="project-title-edit-options">
                                 <div className="form-grid-containers">
-                                <div className="job-forms-items">
-                                    <div className="form-group">
-                                        <label>Project Start Date:</label>
-                                        <input className="form-control" type="date"
-                                            placeholder="Project Start Date"
+                                    <div className="job-forms-items">
+                                        <div className="form-group">
+                                            <label>Project Start Date:</label>
+                                            <input className="form-control" type="date"
+                                                placeholder="Project Start Date"
 
-                                            value={projectStartDate}
-                                            onChange={(e) => setProjectStartDate(e.target.value)}
-                                             min="2000-01-01"
-                                            max="2099-12-31"
+                                                value={projectStartDate}
+                                                onChange={(e) => setProjectStartDate(e.target.value)}
+                                                min="2000-01-01"
+                                                max="2099-12-31"
 
-                                        />
-                                        <div className="air-form-message form-message-error"
-                                            style={{ display: errors?.projectStartDate ? 'flex' : 'none' }}
-                                        >
-                                            <div className="air-icons">
-                                                <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+                                            />
+                                            <div className="air-form-message form-message-error"
+                                                style={{ display: errors?.projectStartDate ? 'flex' : 'none' }}
+                                            >
+                                                <div className="air-icons">
+                                                    <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+                                                </div>
+                                                <span>{errors.projectStartDate}</span>
                                             </div>
-                                            <span>{errors.projectStartDate}</span>
                                         </div>
                                     </div>
-                                </div>
-                               
-                                <div className="job-forms-items">
-                                    <div className="form-group">
-                                        <label>Project End Date:</label>
-                                        <input className="form-control" type="date"
-                                            placeholder="Project End Date"
 
-                                            value={projectEndDate}
-                                            onChange={(e) => setProjectEndDate(e.target.value)}
-                                            max="2099-12-31" // 👈 restrict end date to a safe MySQL-compatible date
+                                    <div className="job-forms-items">
+                                        <div className="form-group">
+                                            <label>Project End Date:</label>
+                                            <input className="form-control" type="date"
+                                                placeholder="Project End Date"
+
+                                                value={projectEndDate}
+                                                onChange={(e) => setProjectEndDate(e.target.value)}
+                                                max="2099-12-31" // 👈 restrict end date to a safe MySQL-compatible date
 
 
-                                        />
-                                        <div className="air-form-message form-message-error"
-                                            style={{ display: errors?.projectEndDate ? 'flex' : 'none' }}
-                                        >
-                                            <div className="air-icons">
-                                                <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+                                            />
+                                            <div className="air-form-message form-message-error"
+                                                style={{ display: errors?.projectEndDate ? 'flex' : 'none' }}
+                                            >
+                                                <div className="air-icons">
+                                                    <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+                                                </div>
+                                                <span>{errors.projectEndDate}</span>
                                             </div>
-                                            <span>{errors.projectEndDate}</span>
                                         </div>
                                     </div>
-                                </div>
                                 </div>
                                 <div className="form-grid-containers">
-                                <div className="job-forms-items">
-                                    <div className="form-group">
-                                        <label>Proposal Staus:</label>
-                                        <select className="form-control" value={proposalStatus}
-                                            onChange={(e) => setProposalStatus(e.target.value)}>
-                                            <option value="">Select</option>
-                                            {/* <option value="shortlisted">Shortlisted</option>
-                                            <option value="interview">Interview</option> */}
-                                            <option value="hired">Hired</option>
-                                            {/* <option value="rejected">Rejected</option> */}
-                                        </select>
-                                        <div className="air-form-message form-message-error"
-                                            style={{ display: errors?.proposalStatus ? 'flex' : 'none' }}
-                                        >
-                                            <div className="air-icons">
-                                                <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+                                    <div className="job-forms-items">
+                                        <div className="form-group">
+                                            <label>Proposal Staus:</label>
+                                            <select className="form-control" value={proposalStatus}
+                                                onChange={(e) => setProposalStatus(e.target.value)}>
+                                                <option value="">Select</option>
+                                                <option value="hired">Hired</option>
+                                            </select>
+                                            <div className="air-form-message form-message-error"
+                                                style={{ display: errors?.proposalStatus ? 'flex' : 'none' }}
+                                            >
+                                                <div className="air-icons">
+                                                    <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+                                                </div>
+                                                <span>{errors.proposalStatus}</span>
                                             </div>
-                                            <span>{errors.proposalStatus}</span>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="job-forms-items">
-                                    <div className="form-group">
-                                        <label>Contract Type:</label>
-                                        <select className="form-control" value={contractType}
-                                            onChange={(e) => setContractType(e.target.value)}>
-                                            <option value="">Select</option>
-                                            {/* <option value="hourly">Hourly</option> */}
-                                            <option value="fixed">Fixed</option>
-                                        </select>
-                                        <div className="air-form-message form-message-error"
-                                            style={{ display: errors?.contractType ? 'flex' : 'none' }}
-                                        >
-                                            <div className="air-icons">
-                                                <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+                                    <div className="job-forms-items">
+                                        <div className="form-group">
+                                            <label>Contract Type:</label>
+                                            <select className="form-control" value={contractType}
+                                                onChange={(e) => setContractType(e.target.value)}>
+                                                <option value="">Select</option>
+                                                <option value="fixed">Fixed</option>
+                                            </select>
+                                            <div className="air-form-message form-message-error"
+                                                style={{ display: errors?.contractType ? 'flex' : 'none' }}
+                                            >
+                                                <div className="air-icons">
+                                                    <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+                                                </div>
+                                                <span>{errors.contractType}</span>
                                             </div>
-                                            <span>{errors.contractType}</span>
                                         </div>
                                     </div>
-                                </div>
                                 </div>
 
                                 <div className="form-grid-containers">
-                                <div className="job-forms-items">
-                                    <div className="form-group">
-                                        <label>Payment Type:</label>
-                                        <select className="form-control" value={paymentType}
-                                            onChange={(e) => setPaymentType(e.target.value)}>
-                                            <option value="">Select</option>
-                                            <option value="milestone">Milestone</option>
-                                            {/* <option value="lump_sum">Lump Sum</option> */}
-                                        </select>
-                                        <div className="air-form-message form-message-error"
-                                            style={{ display: errors?.paymentType ? 'flex' : 'none' }}
-                                        >
-                                            <div className="air-icons">
-                                                <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+                                    <div className="job-forms-items">
+                                        <div className="form-group">
+                                            <label>Payment Type:</label>
+                                            <select className="form-control" value={paymentType}
+                                                onChange={(e) => setPaymentType(e.target.value)}>
+                                                <option value="">Select</option>
+                                                <option value="milestone">Milestone</option>
+                                            </select>
+                                            <div className="air-form-message form-message-error"
+                                                style={{ display: errors?.paymentType ? 'flex' : 'none' }}
+                                            >
+                                                <div className="air-icons">
+                                                    <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+                                                </div>
+                                                <span>{errors.paymentType}</span>
                                             </div>
-                                            <span>{errors.paymentType}</span>
+                                        </div>
+                                    </div>
+
+
+                                    <div className="job-forms-items">
+                                        <div className="form-group">
+                                            <label>Project Amount:</label>
+                                            <input className="form-control" type="text"
+                                                placeholder="$0.00"
+                                                value={projectAmount ? `$${projectAmount}` : ""}
+                                                onChange={handlePriceChange}
+                                            />
+                                            <div className="air-form-message form-message-error"
+                                                style={{ display: errors?.projectAmount ? 'flex' : 'none' }}
+                                            >
+                                                <div className="air-icons">
+                                                    <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+                                                </div>
+                                                <span>{errors.projectAmount}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
-
                                 <div className="job-forms-items">
-                                    <div className="form-group">
-                                        <label>Project Amount:</label>
-                                        <input className="form-control" type="text"
-                                            placeholder="$0.00"
-                                            value={projectAmount ? `$${projectAmount}` : ""}
-                                            onChange={handlePriceChange}
-                                        />
-                                        <div className="air-form-message form-message-error"
-                                            style={{ display: errors?.projectAmount ? 'flex' : 'none' }}
-                                        >
-                                            <div className="air-icons">
-                                                <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
-                                            </div>
-                                            <span>{errors.projectAmount}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                </div>
-                                <div className="job-forms-items">
-                                   
+
                                     <div className="MilestoneDivider">
-                                    {milestones.map((milestone, index) => (
-                                        <div className="MilestoneDiv" key={index}>
-                                            <h3>Milestones</h3>
-                                            <div className="milestone-item">
-                                                <input
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder="Title"
-                                                    value={milestone.title}
-                                                    onChange={(e) => updateMilestone(index, 'title', e.target.value)}
-                                                />
-                                                {milestoneErrors[index]?.title && <div className="air-form-message form-message-error" style={{ display: "flex" }}><div className="air-icons"><img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" /></div><span>{milestoneErrors[index].title}</span></div>}
+                                        {milestones.map((milestone, index) => (
+                                            <div className="MilestoneDiv" key={index}>
+                                                <h3>Milestones</h3>
+                                                <div className="milestone-item">
+                                                    <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        placeholder="Title"
+                                                        value={milestone.title}
+                                                        onChange={(e) => updateMilestone(index, 'title', e.target.value)}
+                                                    />
+                                                    {milestoneErrors[index]?.title && <div className="air-form-message form-message-error" style={{ display: "flex" }}><div className="air-icons"><img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" /></div><span>{milestoneErrors[index].title}</span></div>}
 
-                                                <input
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder="$0.00"
-                                                    value={milestone.amount ? `$${milestone.amount}` : ""}
-                                                   
-                                                    onChange={(e) => updateMilestone(index, 'amount', e.target.value.replace(/\D/g, ""))}
-                                                />
-                                                {milestoneErrors[index]?.amount && <div className="air-form-message form-message-error" style={{ display: "flex" }}><div className="air-icons"><img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" /></div><span>{milestoneErrors[index].amount}</span></div>}
+                                                    <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        placeholder="$0.00"
+                                                        value={milestone.amount ? `$${milestone.amount}` : ""}
 
-                                                <input
-                                                    className="form-control"
-                                                    type="text"
-                                                    placeholder="Description"
-                                                    value={milestone.description}
-                                                    onChange={(e) => updateMilestone(index, 'description', e.target.value)}
-                                                />
-                                                {milestoneErrors[index]?.description && <div className="air-form-message form-message-error" style={{ display: "flex" }}><div className="air-icons"><img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" /></div><span>{milestoneErrors[index].description}</span></div>}
+                                                        onChange={(e) => updateMilestone(index, 'amount', e.target.value.replace(/\D/g, ""))}
+                                                    />
+                                                    {milestoneErrors[index]?.amount && <div className="air-form-message form-message-error" style={{ display: "flex" }}><div className="air-icons"><img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" /></div><span>{milestoneErrors[index].amount}</span></div>}
 
-                                                {index > 0 && (
-                                                    <button className="form-control removed-btns" type="button" onClick={() => removeMilestone(index)}>
-                                                        Remove
-                                                    </button>
-                                                )}
+                                                    <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        placeholder="Description"
+                                                        value={milestone.description}
+                                                        onChange={(e) => updateMilestone(index, 'description', e.target.value)}
+                                                    />
+                                                    {milestoneErrors[index]?.description && <div className="air-form-message form-message-error" style={{ display: "flex" }}><div className="air-icons"><img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" /></div><span>{milestoneErrors[index].description}</span></div>}
+
+                                                    {index > 0 && (
+                                                        <button className="form-control removed-btns" type="button" onClick={() => removeMilestone(index)}>
+                                                            Remove
+                                                        </button>
+                                                    )}
+                                                </div>
+
                                             </div>
-                                          
-                                        </div>
-                                    ))}
- </div>
+                                        ))}
+                                    </div>
                                     {totalAmountError && <div className="air-form-message form-message-error" style={{ display: "flex" }}><div className="air-icons"><img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" /></div><span>{totalAmountError}</span></div>}
 
                                     <button className="form-control add-more-btns" type="button" onClick={addMilestone}>

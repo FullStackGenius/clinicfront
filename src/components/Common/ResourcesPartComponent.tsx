@@ -1,5 +1,4 @@
 import React from 'react'
-import helpers from '../../_helpers/common';
 import { Link } from 'react-router-dom';
 
 interface Resource {

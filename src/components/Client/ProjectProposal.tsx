@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import AuthLayout from '../layouts/AuthLayout'
 import Header from '../layouts/partials/Header'
 import Footer from '../layouts/partials/Footer'
 import axiosInstance from '../../_helpers/axiosInstance';
 import helpers from '../../_helpers/common';
-import PaginationHtml from '../Common/PaginationHtml';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import ContentLoader from '../Common/ContentLoader';
+import { useParams } from 'react-router-dom';
 import { HireNowModal } from './HireNowModal';
 import ProjectProposalComponent from '../Common/ProjectProposalComponent';
 import withReactContent from 'sweetalert2-react-content';
@@ -83,7 +81,6 @@ function ProjectProposal() {
     const [lastPage, setLastPage] = useState(0);
     const [perPage, setPerPage] = useState(6);
     const segment = useParams();
-    const [segmentId, setSegmentId] = useState<string | number | undefined>('');
     const [hireNowModal, setHireNowModal] = useState(false);
     const [proposalId, setPropsalId] = useState(0);
     const [activeTab, setActiveTab] = useState("all");
@@ -94,7 +91,6 @@ function ProjectProposal() {
     };
     const tabs = ['all', 'pending', 'hired', 'rejected'];
 
-    const navigate = useNavigate();
     useEffect(() => {
         fetchProjects(currentPage);
     }, [currentPage, refresh, activeTab]);
@@ -110,11 +106,7 @@ function ProjectProposal() {
             });
 
             if (response.error === "false") {
-                // console.log(response)
                 setProposal(response.data.proposal.data); // Extract projects list
-                // setCurrentPage(response.data.projects.current_page);
-                // setLastPage(response.data.projects.last_page);
-
             }
         } catch (error) {
             console.error("Error fetching projects:", error);
@@ -122,13 +114,11 @@ function ProjectProposal() {
             setTimeout(() => {
                 setLoading(false);
             }, 500);
-            //setLoading(false);
         }
     };
 
     const rejectProposalFun = async (proposal: any) => {
         try {
-            // console.log(segmentId)
             const response: any = await axiosInstance({
                 url: 'project/reject-project-proposal',
                 method: "POST",
@@ -137,7 +127,6 @@ function ProjectProposal() {
             });
 
             if (response.error === "false") {
-                // console.log(response)
                 setActiveTab('rejected');
                 Swal.fire({
                     title: "Deleted!",
@@ -233,7 +222,7 @@ function ProjectProposal() {
                             <div className="tabs-horizontal-items">
 
                                 <div className="horizontal-tab-list">
-                                   <ul>
+                                    <ul>
                                         {tabs.map((tab) => (
                                             <li
                                                 key={tab}
@@ -255,13 +244,13 @@ function ProjectProposal() {
 
 
                             <div className="tab-card-section">
-                                {activeTab === "all" && <ProjectProposalComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={proposals} contractPageFor="freelancer" rejectNowButton={rejectNowButton} hireNowButton={hireNowButton} /> }
+                                {activeTab === "all" && <ProjectProposalComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={proposals} contractPageFor="freelancer" rejectNowButton={rejectNowButton} hireNowButton={hireNowButton} />}
 
-                                {activeTab === "pending" &&<ProjectProposalComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={proposals} contractPageFor="freelancer" rejectNowButton={rejectNowButton} hireNowButton={hireNowButton} />}
+                                {activeTab === "pending" && <ProjectProposalComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={proposals} contractPageFor="freelancer" rejectNowButton={rejectNowButton} hireNowButton={hireNowButton} />}
 
 
                                 {activeTab === "hired" && <ProjectProposalComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={proposals} contractPageFor="freelancer" rejectNowButton={rejectNowButton} hireNowButton={hireNowButton} />}
-                                {activeTab === "rejected" &&<ProjectProposalComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={proposals} contractPageFor="freelancer" rejectNowButton={rejectNowButton} hireNowButton={hireNowButton} />}
+                                {activeTab === "rejected" && <ProjectProposalComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={proposals} contractPageFor="freelancer" rejectNowButton={rejectNowButton} hireNowButton={hireNowButton} />}
 
 
 

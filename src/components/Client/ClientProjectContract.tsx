@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import AuthLayout from '../layouts/AuthLayout'
 import Header from '../layouts/partials/Header'
 import axiosInstance from "../../_helpers/axiosInstance";
-import PaginationHtml from '../Common/PaginationHtml';
 import helpers from '../../_helpers/common';
-import { Link } from 'react-router-dom';
-import ContentLoader from '../Common/ContentLoader';
 import ContractComponent from '../Common/ContractComponent';
 import Loader from '../Common/Loader';
 // Define TypeScript interfaces for API response
@@ -144,7 +141,7 @@ function ClientProjectContract() {
 			setTimeout(() => {
 				setLoading(false);
 			}, 500);
-			//setLoading(false);
+		
 		}
     };
 
@@ -197,12 +194,8 @@ function ClientProjectContract() {
 
                         <div className="job-title-block">
                             <h1>My Contract</h1>
-                            {/* <div className="earnings-text">Total earnings made: <span className="earning-prices">$00.00</span></div> */}
+                          
                         </div>
-
-                        {/* <div className="tab-title-block">
-                            <h3>Contracts by Stage</h3>
-                        </div> */}
 
                         <div className="jobs-tab-items">
 

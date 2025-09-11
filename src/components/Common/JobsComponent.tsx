@@ -4,8 +4,8 @@ import helpers from "../../_helpers/common";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../_helpers/axiosInstance";
 import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-const MySwal = withReactContent(Swal);
+
+
 interface ClientUser {
     id: number;
     name: string;
@@ -69,7 +69,7 @@ const JobsComponent: React.FC<JobsComponentProps> = ({ projects, lastPage, getPa
                         }
                     });
 
-                   
+
                     if (response.error === false) {
                         Swal.fire({
                             title: response.message,
@@ -88,10 +88,7 @@ const JobsComponent: React.FC<JobsComponentProps> = ({ projects, lastPage, getPa
                 }
             }
         });
-
-        
     }
-
 
     return (
         <>
@@ -115,7 +112,6 @@ const JobsComponent: React.FC<JobsComponentProps> = ({ projects, lastPage, getPa
                                                     <div className="span-3-colm">
                                                         <div className="contract-info-content">
                                                             <h4 className="openings-title">Posted by: {helpers.toTitleCase(project?.client_user?.name) + " " + project?.client_user?.last_name}</h4>
-                                                            {/* <div className="openings-text">Metric Mission</div> */}
                                                             <div className="opening-status-text">
                                                                 <span>Posted on:{helpers.formatDate(project?.created_at)}</span>
                                                             </div>
@@ -142,30 +138,6 @@ const JobsComponent: React.FC<JobsComponentProps> = ({ projects, lastPage, getPa
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            {/* <div className="charge-rate-info">
-                                                                    <div className="d-flex flex-wrap rate-gaps">
-                                                                        <div className="rate-text">
-                                                                            <div className="text-body-rate">
-                                                                                <span>Rate: $80/hr</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="hour-text">
-                                                                            <div className="text-body-rate">
-                                                                                <span>Monthly Hour Limit: 40</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="month-rate-text">
-                                                                            <div className="text-body-rate">
-                                                                                <span>Hours this Month: 15</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="current-rate-text">
-                                                                            <div className="text-body-rate">
-                                                                                <span>Current Escrow: $10,000</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div> */}
                                                             <div className="job-show-description">
                                                                 <p dangerouslySetInnerHTML={{ __html: project.description }}  ></p>
                                                             </div>
@@ -186,13 +158,7 @@ const JobsComponent: React.FC<JobsComponentProps> = ({ projects, lastPage, getPa
                                                 {(project.project_status === 1 || project.project_status === 2 || project.project_status === 3) && (
                                                     <a className="tab-view-btns" href="#" onClick={(e) => deleteYourJob(e, project.id)}>Delete Job</a>
                                                 )}
-                                                {/* <a className="tab-time-btns" href="#">Time Sheet</a> */}
                                             </div>
-                                            {/* <div className="open-action-btn">
-                        <button type="button" aria-expanded="false" data-ev-label="dropdown-secondary-toggle" className="air-btn-toggle">
-                          <span className="open-icon"><img className="img-fluid" src="/assets/images/three-dots-icon.svg" alt="" title="" /></span>
-                        </button>
-                      </div> */}
                                         </div>
                                     </div>
                                 </div>

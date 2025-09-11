@@ -1,40 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Loader from '../Common/Loader';
 import Header from '../layouts/partials/Header';
 import Footer from '../layouts/partials/Footer';
 import axiosInstance from '../../_helpers/axiosInstance';
 import ButtonLoader from '../Common/ButtonLoader';
-
-interface User {
-    id: number;
-    name: string;
-    last_name: string | null;
-    username: string | null;
-    user_status: number;
-    accept_condition: boolean | null;
-    apple_id: string | null;
-    google_id: string | null;
-    profile_image: string | null;
-    email: string;
-    stripe_account_id: string;
-    star_rating: number | null;
-    total_hours: number | null;
-    email_verified_at: string;
-    role_id: number;
-    country_id: number;
-    deleted_at: string | null;
-    role_name: string;
-    country_name: string;
-    profile_image_path: string;
-}
-
-interface PaymentSettingInterface {
-    user: User;
-    checkFreeLancerAccountFitToTransfer: boolean;
-    regenerateOnboardingLink: string;
-}
-
-
 
 function PaymentSetting() {
 
@@ -56,7 +25,7 @@ function PaymentSetting() {
                 url: 'stripe/info',
                 method: "GET"
             });
-            
+
             setCheckAccountFitToTransfer(response.data.checkFreeLancerAccountFitToTransfer);
             setAccountOnboardlink(response.data.regenerateOnboardingLink);
             if (response.data.user.stripe_account_id) {
@@ -90,7 +59,7 @@ function PaymentSetting() {
         } catch (error) {
             console.error("Error in API request:", error);
         } finally {
-           
+
         }
     };
 
@@ -123,14 +92,10 @@ function PaymentSetting() {
                                                 {(checkAccountFitToTransfer === false) ? (<><div className='account-not-verified'><p className="not-verify-messages">Your account is not fully verified.  <span className='click-texts' style={{ cursor: 'pointer' }} onClick={navigateToStripeOnBoardLink} >Click to complete onboarding</span></p></div></>) : (<div className='verified-message' >Your account is already ready to receive payouts!</div>)}
                                             </>
                                         ) : (
-                                            <a href="#"  onClick={createAccount} >
-                                              {!submitting ? 'connect your account With Stripe' : <ButtonLoader /> }   C
+                                            <a href="#" onClick={createAccount} >
+                                                {!submitting ? 'connect your account With Stripe' : <ButtonLoader />}   C
                                             </a>
                                         )}</div>
-
-
-
-
                                 </div>
                             </div>
                             <div className="billing-right-colms">

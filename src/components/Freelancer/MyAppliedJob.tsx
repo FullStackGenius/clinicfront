@@ -1,31 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import AuthLayout from '../layouts/AuthLayout'
 import Header from '../layouts/partials/Header'
 import axiosInstance from "../../_helpers/axiosInstance";
-import PaginationHtml from '../Common/PaginationHtml';
 import helpers from '../../_helpers/common';
-import ContentLoader from '../Common/ContentLoader';
 import AppliedJobComponent from '../Common/AppliedJobComponent';
 import Loader from '../Common/Loader';
 import { EditApplicationModal } from './EditApplicationModal';
-// Define TypeScript interfaces for API response
-
-
-interface ProposalPagination {
-    current_page: number;
-    data: Proposal[];
-    first_page_url: string;
-    from: number;
-    last_page: number;
-    last_page_url: string;
-    links: PaginationLink[];
-    next_page_url: string | null;
-    path: string;
-    per_page: number;
-    prev_page_url: string | null;
-    to: number;
-    total: number;
-}
 
 interface Proposal {
     id: number;
@@ -83,11 +63,7 @@ interface ClientUser {
     profile_image_path: string;
 }
 
-interface PaginationLink {
-    url: string | null;
-    label: string;
-    active: boolean;
-}
+
 
 function MyAppliedJob() {
     const [loading, setLoading] = useState(true);
@@ -101,23 +77,17 @@ function MyAppliedJob() {
     const [coverLetterData, setCoverLetterData] = useState('');
     const [stateChangeTrigger, setStateChangeTrigger] = useState(false);
     const [isEdit, setIsEdit] = useState(true);
-
- 
-
     const tabs = ["all", "pending", "hired", "rejected"];
-
-
-
     useEffect(() => {
         fetchProjects(currentPage);
-    }, [currentPage, activeTab,applicationModal]);
+    }, [currentPage, activeTab, applicationModal]);
 
     const fetchProjects = async (page: number) => {
         try {
             if (!stateChangeTrigger) {
-				setLoading(true); // Show loader only on first load
-			}
-           
+                setLoading(true); // Show loader only on first load
+            }
+
             const response: any = await axiosInstance({
                 url: 'get-freelancer-project-proposal',
                 method: "GET",
@@ -130,7 +100,7 @@ function MyAppliedJob() {
                 setLastPage(response.data.proposals.last_page);
 
             }
-            //setLoading(false);
+
         } catch (error) {
             console.error("Error fetching projects:", error);
         } finally {
@@ -138,11 +108,9 @@ function MyAppliedJob() {
                 setStateChangeTrigger(true);
                 setLoading(false);
             }, 500);
-           
+
         }
     };
-
-
 
     const getPagination = () => {
         const pages: (number | string)[] = [];
@@ -185,7 +153,7 @@ function MyAppliedJob() {
         setApplicationModal(true)
         setApplicationId(proposal.id)
         setCoverLetterData(proposal.cover_letter);
-     
+
     }
 
     const reApplyApplication = (proposal: any) => {
@@ -193,26 +161,20 @@ function MyAppliedJob() {
         setApplicationModal(true)
         setApplicationId(proposal.id)
         setCoverLetterData(proposal.cover_letter);
-       
+
     }
 
     return (
         <>
-        <Loader isLoading={loading} />
+            <Loader isLoading={loading} />
             <AuthLayout>
                 <Header />
-
-
                 <section className="all-jobs-section">
                     <div className="main-container">
 
                         <div className="job-title-block">
                             <h1>Applied Jobs</h1>
-                           
                         </div>
-
-                      
-
                         <div className="jobs-tab-items">
                             <div className="tabs-horizontal-items">
                                 <div className="horizontal-tab-list">
@@ -235,29 +197,20 @@ function MyAppliedJob() {
                                     )}
                                 </div>
                             </div>
-
-                            {activeTab === "all" && 
-                               <AppliedJobComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={appliedJob} editMyApplication={editMyApplication} reApplyApplication={reApplyApplication}/>
-                                }
+                            {activeTab === "all" &&
+                                <AppliedJobComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={appliedJob} editMyApplication={editMyApplication} reApplyApplication={reApplyApplication} />
+                            }
 
                             {activeTab === "pending" && <AppliedJobComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={appliedJob} editMyApplication={editMyApplication} reApplyApplication={reApplyApplication} />}
 
                             {activeTab === "hired" && <AppliedJobComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={appliedJob} editMyApplication={editMyApplication} reApplyApplication={reApplyApplication} />}
 
-                            {activeTab === "rejected" &&<AppliedJobComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={appliedJob} editMyApplication={editMyApplication} reApplyApplication={reApplyApplication} />}
-
-
-                           
-
+                            {activeTab === "rejected" && <AppliedJobComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} proposals={appliedJob} editMyApplication={editMyApplication} reApplyApplication={reApplyApplication} />}
                         </div>
-
-
-
                     </div>
                 </section>
             </AuthLayout>
-             <EditApplicationModal coverLetterData={coverLetterData} isEdit={isEdit} id={applicationId} isOpen={applicationModal} onClose={() => {setApplicationModal(false); setStateChangeTrigger(true);} } />
-
+            <EditApplicationModal coverLetterData={coverLetterData} isEdit={isEdit} id={applicationId} isOpen={applicationModal} onClose={() => { setApplicationModal(false); setStateChangeTrigger(true); }} />
         </>
 
     )

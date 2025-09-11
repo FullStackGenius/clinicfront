@@ -1,7 +1,4 @@
-// AdminPayout.tsx
-
 import { useState } from 'react';
-import axios from 'axios';
 import axiosInstance from '../_helpers/axiosInstance';
 
 const AdminPayout = () => {
@@ -10,14 +7,7 @@ const AdminPayout = () => {
   const [transferGroup, setTransferGroup] = useState('');
 
   const releasePayment = async () => {
-    // await axios.post('/api/stripe/release', {
-    //   freelancer_id: freelancerId,
-    //   amount: parseFloat(amount),
-    //   transfer_group: transferGroup,
-    // });
-
     try {
-      // setSubmitting(true);
       const response: any = await axiosInstance({
         url: 'stripe/account',
         method: "POST",
@@ -32,7 +22,6 @@ const AdminPayout = () => {
     } catch (error) {
       console.error("Error in API request:", error);
     } finally {
-      // setSubmitting(false);
     }
 
   };

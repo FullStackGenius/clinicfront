@@ -1,7 +1,6 @@
 import React from "react";
 import PaginationHtml from "./PaginationHtml";
 import helpers from "../../_helpers/common";
-import { Link } from "react-router-dom";
 interface ClientUser {
     id: number;
     name: string;
@@ -29,8 +28,6 @@ interface Proposal {
     project: Project;
 }
 
-
-
 interface JobsComponentProps {
     proposals: Proposal[];
     lastPage: number;
@@ -42,7 +39,7 @@ interface JobsComponentProps {
 
 }
 
-const AppliedJobComponent: React.FC<JobsComponentProps> = ({ proposals, lastPage, getPagination, handlePageChange, currentPage, editMyApplication ,reApplyApplication}) => {
+const AppliedJobComponent: React.FC<JobsComponentProps> = ({ proposals, lastPage, getPagination, handlePageChange, currentPage, editMyApplication, reApplyApplication }) => {
     return (
         <>
             <div className="tab-card-section">
@@ -65,7 +62,6 @@ const AppliedJobComponent: React.FC<JobsComponentProps> = ({ proposals, lastPage
                                                     <div className="span-3-colm">
                                                         <div className="contract-info-content">
                                                             <h4 className="openings-title">Posted by: {helpers.toTitleCase(project?.project?.client_user?.name) + " " + (project?.project?.client_user?.last_name != "") ? project?.project?.client_user?.last_name : ""}</h4>
-                                                            {/* <div className="openings-text">Metric Mission</div> */}
                                                             <div className="opening-status-text">
                                                                 <span>Posted on:{helpers.formatDate(project?.created_at)}</span>
                                                             </div>
@@ -84,30 +80,6 @@ const AppliedJobComponent: React.FC<JobsComponentProps> = ({ proposals, lastPage
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            {/* <div className="charge-rate-info">
-                                                                    <div className="d-flex flex-wrap rate-gaps">
-                                                                        <div className="rate-text">
-                                                                            <div className="text-body-rate">
-                                                                                <span>Rate: $80/hr</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="hour-text">
-                                                                            <div className="text-body-rate">
-                                                                                <span>Monthly Hour Limit: 40</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="month-rate-text">
-                                                                            <div className="text-body-rate">
-                                                                                <span>Hours this Month: 15</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="current-rate-text">
-                                                                            <div className="text-body-rate">
-                                                                                <span>Current Escrow: $10,000</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div> */}
                                                             <div className="job-show-description">
                                                                 <p>{helpers.toTitleCase(project.cover_letter)}</p>
                                                             </div>
@@ -121,29 +93,15 @@ const AppliedJobComponent: React.FC<JobsComponentProps> = ({ proposals, lastPage
                                     <div className="tab-span-colm-3 applied-job-button">
                                         <div className="d-flex tab-btns-grid">
                                             <div className="tab-btns-items">
-                                               
-
-                                               { project.project.fixed_rate &&  <a className="tab-view-btns" href="#" onClick={(e) => e.preventDefault()} >Fixed - <span>${project.project.fixed_rate}/hr</span></a>}
-                                                { project.project.hourly_from &&  project.project.hourly_to && <a className="tab-view-btns" href="#" onClick={(e) => e.preventDefault()} >Hourly - <span>${project.project.hourly_from} to ${project.project.hourly_to}/hr</span></a> }
-                                                {/* {(project.project_status === 3 || project.project_status === 4 || project.project_status === 5) && (
-                                                    <Link className="tab-message-btns" to={`/client/project-proposal/${project.id}`}>view Proposal</Link>
-                                                )} */}
-
+                                                {project.project.fixed_rate && <a className="tab-view-btns" href="#" onClick={(e) => e.preventDefault()} >Fixed - <span>${project.project.fixed_rate}/hr</span></a>}
+                                                {project.project.hourly_from && project.project.hourly_to && <a className="tab-view-btns" href="#" onClick={(e) => e.preventDefault()} >Hourly - <span>${project.project.hourly_from} to ${project.project.hourly_to}/hr</span></a>}
                                                 {(project.status === 'pending' || project.status === 'shortlisted' || project.status === 'interview' || project.status === 'rejected') && (
                                                     <a onClick={() => editMyApplication(project)} className="tab-time-btns" href="#">Edit </a>
                                                 )}
-
                                                 {project.status === 'rejected' && (
                                                     <a onClick={() => reApplyApplication(project)} className="tab-time-btns" href="#">Re-Apply </a>
                                                 )}
-
-
                                             </div>
-                                            {/* <div className="open-action-btn">
-                        <button type="button" aria-expanded="false" data-ev-label="dropdown-secondary-toggle" className="air-btn-toggle">
-                          <span className="open-icon"><img className="img-fluid" src="/assets/images/three-dots-icon.svg" alt="" title="" /></span>
-                        </button>
-                      </div> */}
                                         </div>
                                     </div>
                                 </div>

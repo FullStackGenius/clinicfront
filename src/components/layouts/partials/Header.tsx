@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-//import { useSelector } from 'react-redux';
-//import { selectUser } from '../../../redux/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../redux/store';
 import { checkUserLoggedIn } from "../../../_helpers/checkUserLoggedIn";
@@ -22,7 +20,6 @@ interface Setting {
 function Header() {
    const navigate = useNavigate();
    const loggedIn = checkUserLoggedIn();
-   //const user = useSelector(selectUser);
    const user = useSelector((state: RootState) => state.user.user);
    const [isActive, setIsActive] = useState<boolean>(false);
    const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false);
@@ -65,9 +62,7 @@ function Header() {
             url: "logout",
             method: "POST"
          });
-         //after successfull logout clear local storage
          localStorage.clear();
-         //after successfull logout navigate sign-in page
          navigate('/')
       } catch (error) {
          console.error("Error in api request:", error);
@@ -77,7 +72,6 @@ function Header() {
    }
 
    const handleRedirectToSignup = (roleId: number): void => {
-      //navigate("/sign-up", { state: { role: roleId } });
       navigate(`/sign-up?role=${roleId}`);
    };
 
@@ -248,12 +242,6 @@ function Header() {
                                                    </Link>
                                                 </li>
                                              </ul>
-                                             {/* <ul className="pr_8x">
-                                                <li onClick={() => handleRedirectToSignup(3)}>
-                                                   <a onClick={() => handleRedirectToSignup(3)}><div className="vs-text">Apply as a freelancer</div><span className="vs-text-small"> Access more Connects, get strategic insights on competitors, and try out the latest tools.</span>
-                                                   </a>
-                                                </li>
-                                             </ul> */}
                                              <ul className="pr_8x">
                                                 <li >
                                                    <Link to="/projects" ><div className="vs-text"> Find work for your skills</div><span className="vs-text-small"> Explore the kind of work available in your field. </span>
@@ -366,7 +354,6 @@ function Header() {
                      </div>
                      ) : (
                         <div className="header-btns">
-                           {/* <span className="login-menu-btns hidden-on-mobile"><Link to="/sign-in">Login</Link></span> */}
                            <span className="login-menu-btns"><Link to="/sign-in">Login</Link></span>
                            <span className="account-btn"><Link to="/sign-up-as">Create account</Link></span>
                         </div>

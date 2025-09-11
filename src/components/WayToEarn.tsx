@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from './layouts/partials/Header'
 import Footer from './layouts/partials/Footer'
 import Loader from './Common/Loader';
@@ -19,9 +19,8 @@ function WayToEarn() {
 
 
     const handleRedirectToSignup = (): void => {
-       let roleId = 3;
+        let roleId = 3;
         navigate(`/sign-up?role=${roleId}`);
-        //navigate("/sign-up", { state: { role: 3 } });
     };
     return (
         <>
@@ -36,7 +35,7 @@ function WayToEarn() {
                                 <p>Break free from firm limitations! Keep more of what you earn, gain clients effortlessly, and enjoy flexible, risk-free independence as an accountant.</p>
                                 <div className="find-work-btns">
                                     {(user) ? <Link to="/projects">Find Work</Link> : <a onClick={(e) => {
-                                        e.preventDefault(); 
+                                        e.preventDefault();
                                         handleRedirectToSignup()
                                     }}>Find Work</a>}
                                 </div>

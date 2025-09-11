@@ -1,5 +1,3 @@
-// src/routes/clientRoutes.tsx
-import React from 'react';
 import { Route } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
 import CreateProjectStep1 from "../components/Client/CreateProject/Step1";
@@ -120,7 +118,7 @@ const ClientRoutes = () => (
 
 		<Route path='/all-transactions'
 			element={
-				<ProtectedRoute allowedRoles={['client','freelancer']}>
+				<ProtectedRoute allowedRoles={['client', 'freelancer']}>
 					<AllTransaction />
 				</ProtectedRoute>
 			}

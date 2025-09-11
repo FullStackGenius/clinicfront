@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Footer from '../layouts/partials/Footer';
 import Loader from '../Common/Loader';
 import Header from '../layouts/partials/Header';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../_helpers/axiosInstance';
-// import { loadStripe } from '@stripe/stripe-js';
-// import { Elements } from '@stripe/react-stripe-js';
 import ContractPayment from './ContractPayment';
 
-
-// const stripePromise = loadStripe('pk_test_51RA80TKV1lSSoArcOW7JJniitp4RLGL3VaKRgrgrZzmjx6p2nIzm2B9FB0U7DtxegHfNCXiYJk56WkiDGCKpsHCL00nIGD25U5');
 interface Contract {
     id: number;
     project_id: number;
@@ -90,9 +86,6 @@ function MakeContractPayment() {
     const [contractId, setcontractId] = useState(Number(segment.contract_id));
     const navigate = useNavigate();
     const [contractDetail, setContractDetail] = useState<Contract | null>(null);
-
-
-    // console.log(segment.contract_id)
     useEffect(() => {
         getStripeAccountInfo();
     }, []);
@@ -106,11 +99,10 @@ function MakeContractPayment() {
                 data: { contract_id: contractId }
             });
             if (response.error == "false") {
-                //console.log(response.data.contract);
                 setContractDetail(response.data.contract);
             }
         } catch (error) {
-            if(error){
+            if (error) {
                 navigate("/client/job-contracts");
             }
             console.error("Error in API request:", error);
@@ -120,7 +112,6 @@ function MakeContractPayment() {
             }, 200);
         }
     }
-    // console.log(Number(contractDetail?.amount));
     return (
         <>
             <Loader isLoading={loading} />
@@ -128,12 +119,9 @@ function MakeContractPayment() {
             <section className="payments-page-section">
                 <div className="main-container">
                     <div className="pricing-banner-content">
-                       
-                        {contractDetail && 
-                        // <Elements stripe={stripePromise}>
-                            <ContractPayment contractDetail={contractDetail} amount={Number(contractDetail?.amount)} contractId={contractId} />
 
-                        // </Elements>
+                        {contractDetail &&
+                            <ContractPayment contractDetail={contractDetail} amount={Number(contractDetail?.amount)} contractId={contractId} />
                         }
                     </div>
                 </div>

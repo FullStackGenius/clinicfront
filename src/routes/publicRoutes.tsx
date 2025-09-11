@@ -1,5 +1,3 @@
-// src/routes/publicRoutes.tsx
-import React from 'react';
 import { Route } from 'react-router-dom';
 import Home from "../components/Home";
 import OurFreelancer from "../components/OurFreelancer";

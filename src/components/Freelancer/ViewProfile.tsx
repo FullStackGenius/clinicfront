@@ -6,13 +6,7 @@ import type { AppDispatch } from '../../redux/store';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import AuthLayout from '../layouts/AuthLayout';
-// import ButtonLoader from '../Common/ButtonLoader';
-// import ContentLoader from '../Common/ContentLoader';
 import Header from '../layouts/partials/Header';
-// import FeaturedProject from './ViewProfilePartials/FeaturedProject';
-// import RatingStarSection from './ViewProfilePartials/RatingStarSection';
-// import SearchSection from './ViewProfilePartials/SearchSection';
-// import ReviewSection from './ViewProfilePartials/ReviewSection';
 import { EditUserNameModal } from './ProfileEdit/EditUserNameModal';
 import { EditSkillsModal } from './ProfileEdit/EditSkillsModal';
 import { EditSubCategoryModal } from './ProfileEdit/EditSubCategoryModal';
@@ -27,7 +21,6 @@ import { AddExperianceModal } from './ProfileCreate/AddExperianceModal';
 import { UploadResumeModal } from './ProfileCreate/UploadResumeModal';
 import { ProfileSocialShareModal } from './ProfileEdit/ProfileSocialShareModal';
 import axiosInstance from "../../_helpers/axiosInstance";
-// import helpers from "../../_helpers/common";
 import { getUserInfo } from "../../_helpers/getUserInfo";
 import { checkUserLoggedIn } from "../../_helpers/checkUserLoggedIn";
 import Loader from '../Common/Loader';
@@ -101,9 +94,7 @@ function ViewProfile() {
 	const navigate = useNavigate();
 	const segment = useParams();
 	const dispatch = useDispatch<AppDispatch>();
-	//console.log('segment', segment)
 	const currentUrl = window.location.href;
-
 	const [loading, setLoading] = useState(true);
 	const [resume, setResume] = useState<Resume>({ id: 0, resume_path: '', resume_url: '' });
 	const [subcategories, setSubCategories] = useState<SubCategory[]>([]);
@@ -167,7 +158,6 @@ function ViewProfile() {
 	const hasFetchedData = useRef(false);
 
 	useEffect(() => {
-		//console.log('fetch questio use effect')
 		if (!hasFetchedData.current) {
 			hasFetchedData.current = true
 			fetchStepQuestions();
@@ -190,21 +180,14 @@ function ViewProfile() {
 
 	const fetchStepQuestions = async () => {
 		try {
-			//setLoading(true);
 			if (!stateChangeTrigger) {
 				setLoading(true); // Show loader only on first load
 			}
-			/*const response: any = await axiosInstance({
-					url: 'get-user-step-data',
-					method: "POST",
-					data: {name: 'all'}
-				});*/
 			const response: any = await axiosInstance({
 				url: 'get-user-step-data-profile',
 				method: "POST",
 				data: { user_id: segment.user_id, name: 'all' }
 			});
-			//console.log('get-user-step-data', response)
 			var details = response.data.details;
 			setNewData(true);
 			if (details.step1.resume) {
@@ -624,77 +607,13 @@ function ViewProfile() {
 									{/* add new design  */}
 
 									<div className="pr-overview-infos">
-										{/* <div className="d-flex flex-wrap pr-payment-info-sec">
-											<div className="colm-6">
-												<div className="overview-content-div">
-													<h3>Overview</h3>
-													<div className="overview-listing">
-														<ul>
-															<li className="d-flex align-items-center pr-listing"><span className="over-list-icon"><img className="img-fluid" src="images/current-pro-icon.svg" alt="" title="" /></span> <span className="over-list-text">Current top pro</span></li>
-															<li className="d-flex align-items-center pr-listing"><span className="over-list-icon"><img className="img-fluid" src="images/trophy-icon.svg" alt="" title="" /></span> <span className="over-list-text">Hire 171 times</span></li>
-															<li className="d-flex align-items-center pr-listing"><span className="over-list-icon"><img className="img-fluid" src="images/over-location-icon.svg" alt="" title="" /></span> <span className="over-list-text">6 Similar jobs near you</span></li>
-															<li className="d-flex align-items-center pr-listing"><span className="over-list-icon"><img className="img-fluid" src="images/user-checked-icon.svg" alt="" title="" /></span> <span className="over-list-text">Background Checked</span></li>
-															<li className="d-flex align-items-center pr-listing"><span className="over-list-icon"><img className="img-fluid" src="images/employ-icon.svg" alt="" title="" /></span> <span className="over-list-text">1 Employ</span></li>
-															<li className="d-flex align-items-center pr-listing"><span className="over-list-icon"><img className="img-fluid" src="images/time-line-icon.svg" alt="" title="" /></span> <span className="over-list-text">2 years in bussiness</span></li>
-														</ul>
-													</div>
-													<div className="overview-hour">
-														<h3>Overview</h3>
-														<div className="hour-blocks">
-															<div className="hour-boxs">
-																<ul>
-																	<li className="d-flex justify-space-between">
-																		<span className="waek-text">Sun</span>
-																		<span className="time-text">8:00 am- 4:00 pm</span>
-																	</li>
-																	<li className="d-flex justify-space-between">
-																		<span className="waek-text">Mon</span>
-																		<span className="time-text">8:00 am- 4:00 pm</span>
-																	</li>
-																</ul>
-																<div className="hr-read-btns">
-																	<a href="#">Read more</a>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-											<div className="colm-6">
-												<div className="payment-content-div">
-													<div className="over-payment-block">
-														<h3>Payment methods</h3>
-														<p>The best place to discover &amp; apply to the coolest start up jobs The best place to discover &amp; apply to the coolest start up jobsThe best place to discover &amp; apply </p>
-													</div>
-													<div className="over-social-block">
-														<h3>Social media</h3>
-														<ul>
-															<li><a href="#">Facebook</a></li>
-														</ul>
-													</div>
-													<div className="over-topPro-block">
-														<h3>Top Pro Status</h3>
-														<p>The best place to discover &amp; apply to the coolest start up jobs The best place to discover &amp; apply</p>
-														<div className="over-award">
-															<div className="award-icons">
-																<div className="award-image-block">
-																	<img className="img-fluid" src="images/pro-status-icon.svg" alt="" title="" />
-																	<p>2023</p>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div> */}
-
 										{!showControl() && (<div className="overview-two-btns">
 											<div className="d-flex align-items-center view-btns-items justify-space-between">
 												<Link className="btn msg-btn" to={`/chat/${segment.user_id}`} ><span><img className="img-fluid" src="images/message-icon.svg" alt="" title="" /></span>Message</Link>
 
 												<a className="btn call-btn" href="#"><span><img className="img-fluid" src="images/call-icon.svg" alt="" title="" /></span>Request  a call</a>
 											</div>
-										</div> )}
+										</div>)}
 
 									</div>
 

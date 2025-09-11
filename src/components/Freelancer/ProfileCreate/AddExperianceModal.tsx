@@ -4,17 +4,17 @@ import ButtonLoader from '../../Common/ButtonLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
 
 interface Experience {
-  id: number;
-  title: string;
-  company: string;
-  location: string;
-  country_id: string;
-  currently_working: string;
-  start_month: string;
-  start_year: string;
-  end_month: string;
-  end_year: string;
-  description: string;
+	id: number;
+	title: string;
+	company: string;
+	location: string;
+	country_id: string;
+	currently_working: string;
+	start_month: string;
+	start_year: string;
+	end_month: string;
+	end_year: string;
+	description: string;
 }
 
 interface ExperianceModalProps {
@@ -41,13 +41,9 @@ interface ExperianceFormState {
 	description: string;
 }
 
-interface SaveUserExperienceResponse {
-  error: string;  // or boolean, based on your API response
-  message?: string; // optional, or any other properties returned
-}
+
 
 export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, isOpen, onClose }) => {
-	//console.log('selected edit experiance', selected);
 	const months = helpers.monthArray();
 	const years = helpers.yearArray(0, 60);
 	const [countries, setCountries] = useState<Country[]>([]);
@@ -86,45 +82,43 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 	}, [isOpen]);
 
 	const updateEditFormState = () => {
-		//if (selected && selected.id > 0) {
-			setFormData({
-				title: selected.title || '',
-				company: selected.company || '',
-				location: selected.location || '',
-				country: selected.country_id || '0',
-				currently_working: Number(selected.currently_working) === 1,
-				start_month: selected.start_month || '',
-				start_year: selected.start_year || '',
-				end_month: selected.end_month || '',
-				end_year: selected.end_year || '',
-				description: selected.description || ''
-			});
-		//}
+		setFormData({
+			title: selected.title || '',
+			company: selected.company || '',
+			location: selected.location || '',
+			country: selected.country_id || '0',
+			currently_working: Number(selected.currently_working) === 1,
+			start_month: selected.start_month || '',
+			start_year: selected.start_year || '',
+			end_month: selected.end_month || '',
+			end_year: selected.end_year || '',
+			description: selected.description || ''
+		});
 	};
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
 		const { name, value, type } = e.target;
-		  
+
 		// Define cleanValue based on the input type
 		let cleanValue: string | boolean = value;
-		  
+
 		// Check if the input type is checkbox, then use 'checked' instead of 'value'
 		if (type === 'checkbox') {
 			const target = e.target as HTMLInputElement; // Cast to HTMLInputElement
 			const isChecked = target.checked;
 			// If the checkbox is checked, reset `end_month` and `end_year`
 			setFormData((prevFormData) => ({
-			  ...prevFormData,
-			  currently_working: isChecked,
-			  end_month: isChecked ? '' : prevFormData.end_month,
-			  end_year: isChecked ? '' : prevFormData.end_year 
+				...prevFormData,
+				currently_working: isChecked,
+				end_month: isChecked ? '' : prevFormData.end_month,
+				end_year: isChecked ? '' : prevFormData.end_year
 			}));
 
 			// Reset errors for `end_month` and `end_year` if checked
 			setErrors((prevErrors) => ({
-			  ...prevErrors,
-			  end_month: isChecked ? undefined : prevErrors.end_month,
-			  end_year: isChecked ? undefined : prevErrors.end_year
+				...prevErrors,
+				end_month: isChecked ? undefined : prevErrors.end_month,
+				end_year: isChecked ? undefined : prevErrors.end_year
 			}));
 
 			return;
@@ -156,19 +150,19 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 			newErrors.end_month = 'End month is required';
 			newErrors.end_year = 'End year is required';
 		}
-		
-		if(!formData.currently_working && (formData.end_month !== '' &&  formData.end_year !== '')){
+
+		if (!formData.currently_working && (formData.end_month !== '' && formData.end_year !== '')) {
 			let date_valid = validateDates(formData.start_month, formData.start_year, formData.end_month, formData.end_year);
-			if(!date_valid){
+			if (!date_valid) {
 				newErrors.end_month = 'End month/year should be greater then start month/year';
 				newErrors.end_year = 'End month/year should be greater then start month/year';
 			}
 		}
-		
+
 		setErrors(newErrors);
 		return Object.keys(newErrors).length === 0;
 	};
-	
+
 	const validateDates = (startMonth: string, startYear: string, endMonth: string, endYear: string) => {
 		// Check if end year is less than start year
 		if (endYear < startYear) {
@@ -184,7 +178,6 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 	}
 
 	const handleSubmit = async (): Promise<void> => {
-		//console.log('handle submit function called');
 		if (validate()) {
 			setIsSubmiting(true);
 			try {
@@ -198,13 +191,12 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 					updatedData.user_experience_id = selected.id;
 					updatedData.type = 'edit';
 				}
-				
+
 				const response: any = await axiosInstance({
-								url: "save-user-experience",
-								method: "POST",
-								data: updatedData,
-							  });
-				//console.log('response', response);			  
+					url: "save-user-experience",
+					method: "POST",
+					data: updatedData,
+				});
 				if (response.error === 'false') {
 					setFormData({
 						title: '',
@@ -243,14 +235,8 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 			description: ''
 		});
 		onClose();
-		/*if (updated) {
-			const result = window.confirm('Closing the modal will lose your changes?');
-			if (result) onClose();
-		} else {
-			onClose();
-		}*/
 	};
-	//console.log('errors', errors)
+
 	return (
 		<div id="upload-experience-popup" className="air-modal-popup" style={{ display: isOpen ? 'block' : 'none' }}>
 			<div className="air-modal-items air-modal-import-resume-modal">
@@ -281,9 +267,9 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 										<div
 											className="air-form-message form-message-error"
 											style={{ display: errors.title ? 'flex' : 'none' }}
-										  >
+										>
 											<div className="air-icons">
-											  <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+												<img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
 											</div>
 											<span>{errors.title}</span>
 										</div>
@@ -300,13 +286,13 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 											value={formData.company}
 											onChange={handleChange}
 										/>
-										
+
 										<div
 											className="air-form-message form-message-error"
 											style={{ display: errors.company ? 'flex' : 'none' }}
-										  >
+										>
 											<div className="air-icons">
-											  <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+												<img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
 											</div>
 											<span>{errors.company}</span>
 										</div>
@@ -324,16 +310,16 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 												value={formData.location}
 												onChange={handleChange}
 											/>
-											
+
 											<div
-											className="air-form-message form-message-error"
-											style={{ display: errors.location ? 'flex' : 'none' }}
-										  >
-											<div className="air-icons">
-											  <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+												className="air-form-message form-message-error"
+												style={{ display: errors.location ? 'flex' : 'none' }}
+											>
+												<div className="air-icons">
+													<img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+												</div>
+												<span>{errors.location}</span>
 											</div>
-											<span>{errors.location}</span>
-										</div>
 										</div>
 
 										<div className="from-group">
@@ -349,16 +335,16 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 													<option key={item.id} value={item.id}>{item.name}</option>
 												))}
 											</select>
-											
+
 											<div
-											className="air-form-message form-message-error"
-											style={{ display: errors.country ? 'flex' : 'none' }}
-										  >
-											<div className="air-icons">
-											  <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+												className="air-form-message form-message-error"
+												style={{ display: errors.country ? 'flex' : 'none' }}
+											>
+												<div className="air-icons">
+													<img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+												</div>
+												<span>{errors.country}</span>
 											</div>
-											<span>{errors.country}</span>
-										</div>
 										</div>
 									</div>
 									{/* Currently Working Checkbox */}
@@ -372,9 +358,9 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 													onChange={handleChange}
 												/>
 												<span data-test="checkbox-input" className="air-checkbox-input">
-												<span className="air-icon" data-test="checkbox-icon">
-													<img className="img-fluid" src="/assets/images/small-check-icon.svg" alt="" title="" />
-												</span>
+													<span className="air-icon" data-test="checkbox-icon">
+														<img className="img-fluid" src="/assets/images/small-check-icon.svg" alt="" title="" />
+													</span>
 												</span>{`I am Currently working in this Role`}
 											</label>
 										</div>
@@ -408,16 +394,16 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 													))}
 												</select>
 											</div>
-											
+
 											<div
-											className="air-form-message form-message-error"
-											style={{ display: (errors.start_month || errors.start_year) ? 'flex' : 'none' }}
-										  >
-											<div className="air-icons">
-											  <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+												className="air-form-message form-message-error"
+												style={{ display: (errors.start_month || errors.start_year) ? 'flex' : 'none' }}
+											>
+												<div className="air-icons">
+													<img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+												</div>
+												<span>{errors.start_month || errors.start_year}</span>
 											</div>
-											<span>{errors.start_month || errors.start_year}</span>
-										</div>
 										</div>
 
 										{/* End Date */}
@@ -449,16 +435,16 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 													))}
 												</select>
 											</div>
-											
+
 											<div
-											className="air-form-message form-message-error"
-											style={{ display: (errors.end_month || errors.end_year) ? 'flex' : 'none' }}
-										  >
-											<div className="air-icons">
-											  <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+												className="air-form-message form-message-error"
+												style={{ display: (errors.end_month || errors.end_year) ? 'flex' : 'none' }}
+											>
+												<div className="air-icons">
+													<img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+												</div>
+												<span>{errors.end_month || errors.end_year}</span>
 											</div>
-											<span>{errors.end_month || errors.end_year}</span>
-										</div>
 										</div>
 									</div>
 
@@ -479,7 +465,7 @@ export const AddExperianceModal: React.FC<ExperianceModalProps> = ({ selected, i
 							</form>
 						</div>
 					</div>
-					
+
 					{/* Modal Footer */}
 					<div className="airModal-footer">
 						<div className="modal-two-btns d-flex align-items-center justify-space-between">

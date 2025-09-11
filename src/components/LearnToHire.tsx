@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import  { useState, useEffect, useRef } from 'react';
 import { Link } from "react-router-dom";
 import parse from 'html-react-parser';
 import Header from './layouts/partials/Header';
 import Footer from './layouts/partials/Footer';
-import ContentLoader from './Common/ContentLoader';
-import helpers from "../_helpers/common";
 import axiosInstance from "../_helpers/axiosInstance";
 import Loader from './Common/Loader';
 
@@ -29,7 +27,6 @@ function LearnToHire() {
 		try {
 			setLoading(true);
 			const response = await axiosInstance.get('get-learn-how-to-hire-page-data');
-			//console.log('response', response)
 			setHireData(response.data.learn_how_to_hire)
 		} catch (error) {
 			console.error("Error in API request:", error);

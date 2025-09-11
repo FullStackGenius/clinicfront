@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../../../redux/store';
 import { setProject } from '../../../redux/projectSlice';
 import Layout from './Layout';
-import ContentLoader from '../../Common/ContentLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
-import helpers from "../../../_helpers/common";
 import Loader from '../../Common/Loader';
 
 interface ProjectType {
@@ -42,7 +40,6 @@ function Step1() {
 				url: 'get-project-type',
 				method: "GET"
 			});
-			//console.log('get-user-step-data', response)
 			setProjectTypes(response.data.project_type);
 		} catch (error) {
 			console.error("Error in API request:", error);
@@ -50,7 +47,7 @@ function Step1() {
 			setTimeout(() => {
 				setLoading(false);
 			}, 500);
-			//setLoading(false);
+
 		}
 	};
 
@@ -74,8 +71,6 @@ function Step1() {
 						method: "POST",
 						data: { project_type: projecttype }
 					});
-					//console.log('response', response);
-					//console.log('response.data.project', response.data.project);
 					if (response.error === 'false') {
 						dispatch(setProject(response.data.poject));
 						navigate(`/client/create-project-step-two`); // Navigate to next step
@@ -90,7 +85,6 @@ function Step1() {
 			navigate(`/client/create-project-step-two`);
 		}
 	};
-	//console.log('projecttype', projecttype)
 	return (
 		<>
 			<Loader isLoading={loading} />
@@ -104,48 +98,48 @@ function Step1() {
 						</h3>
 						<div className="accordionPanel">
 							<div className="box-radio-group">
-								
-										{projecttypes && projecttypes.length > 0 ? (
-											<>
-												{projecttypes.map((item, index) => (
-													<div key={index} className="first-button-box">
-														<div className="air3-radioBtn-box">
-															<input className="form-check-input"
-																type="radio"
-																value={item.id}
-																name="project-type"
-																id="radio-group-1"
-																checked={projecttype === item.id}
-																onChange={(e) => setProjectType(item.id)}
-															/>
-															<div className="form-radio-bg">
-																<div className="air3-radio-label-check-icon">
-																	<div className="air3-checkbox-input">
-																		<span className="air3-radio-icon">
-																			<img className="img-fluid" src="/assets/images/active-check-icon.svg" alt="" title="" />
-																		</span>
-																	</div>
-																</div>
-																<div className="air3-icon-lg">
-																	{item.id === 1 ? (
-																		<img className="img-fluid" src="/assets/images/project-icons.svg" alt="" title="" />
-																	) : (
-																		<img className="img-fluid" src="/assets/images/short-term-icon.svg" alt="" title="" />
-																	)}
-																</div>
-																<div className="air3-btn-box-label">
-																	<h4>{item.name}</h4>
-																	<div className="air3-btn-box-text">{item.description}</div>
-																</div>
+
+								{projecttypes && projecttypes.length > 0 ? (
+									<>
+										{projecttypes.map((item, index) => (
+											<div key={index} className="first-button-box">
+												<div className="air3-radioBtn-box">
+													<input className="form-check-input"
+														type="radio"
+														value={item.id}
+														name="project-type"
+														id="radio-group-1"
+														checked={projecttype === item.id}
+														onChange={(e) => setProjectType(item.id)}
+													/>
+													<div className="form-radio-bg">
+														<div className="air3-radio-label-check-icon">
+															<div className="air3-checkbox-input">
+																<span className="air3-radio-icon">
+																	<img className="img-fluid" src="/assets/images/active-check-icon.svg" alt="" title="" />
+																</span>
 															</div>
 														</div>
+														<div className="air3-icon-lg">
+															{item.id === 1 ? (
+																<img className="img-fluid" src="/assets/images/project-icons.svg" alt="" title="" />
+															) : (
+																<img className="img-fluid" src="/assets/images/short-term-icon.svg" alt="" title="" />
+															)}
+														</div>
+														<div className="air3-btn-box-label">
+															<h4>{item.name}</h4>
+															<div className="air3-btn-box-text">{item.description}</div>
+														</div>
 													</div>
-												))}
-											</>
-										) : (
-											<p>No Content Found</p>
-										)}
-									
+												</div>
+											</div>
+										))}
+									</>
+								) : (
+									<p>No Content Found</p>
+								)}
+
 							</div>
 							<div className="air-form-message form-message-error"
 								style={{ display: error !== '' ? 'flex' : 'none' }}

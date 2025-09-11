@@ -40,7 +40,6 @@ interface ContractQverviewProps {
 }
 
 const ContractDetailComponent: React.FC<ContractQverviewProps> = ({ contractData }) => {
-    const tabs = ['overview', 'contract details'];
     const user = useSelector((state: RootState) => state.user.user);
     return (
         <>

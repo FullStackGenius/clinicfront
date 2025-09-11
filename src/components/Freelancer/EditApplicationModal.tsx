@@ -1,10 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from 'react-redux';
-// import { setLoadData } from "../../../redux/commonSlice";
-// import type { AppDispatch } from '../../../redux/store';
-// import helpers from "../../../_helpers/common";
-// import ButtonLoader from '../../Common/ButtonLoader';
-// import axiosInstance from "../../../_helpers/axiosInstance";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import axiosInstance from "../../_helpers/axiosInstance";
@@ -16,32 +10,25 @@ interface TitleModalProps {
     coverLetterData: string;
     isOpen: boolean;
     onClose: () => void;
-    isEdit:boolean;
+    isEdit: boolean;
 
 }
 
-export const EditApplicationModal: React.FC<TitleModalProps> = ({ id,coverLetterData, isOpen, onClose ,isEdit}) => {
-
-   
-    const [bidAmount, setBidAmount] = useState('');
+export const EditApplicationModal: React.FC<TitleModalProps> = ({ id, coverLetterData, isOpen, onClose, isEdit }) => {
     const [coverLetter, setCoverLetter] = useState<string>(isEdit ? coverLetterData : '');
-    const [error, setError] = useState<string>('');
     const [errorCoverLetter, setErrorCoverLetter] = useState<string>('');
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         if (isEdit && coverLetterData) {
-          setCoverLetter(coverLetterData);
+            setCoverLetter(coverLetterData);
         } else if (!isEdit) {
-          setCoverLetter('');
+            setCoverLetter('');
         }
-      }, [coverLetterData, isEdit]);
+    }, [coverLetterData, isEdit]);
 
     const validateForm = (): boolean => {
         let isValid = true;
-
-
-
         if (!coverLetter.trim()) {
             setErrorCoverLetter('Application Notes is required');
             isValid = false;
@@ -51,9 +38,6 @@ export const EditApplicationModal: React.FC<TitleModalProps> = ({ id,coverLetter
 
         return isValid;
     };
-
-
-
     const handleCoverLetterChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setCoverLetter(e.target.value);
         if (e.target.value.trim()) {
@@ -70,19 +54,15 @@ export const EditApplicationModal: React.FC<TitleModalProps> = ({ id,coverLetter
             const response: any = await axiosInstance({
                 url: 'edit-project-proposal',
                 method: "POST",
-                data: { proposal_id: id, cover_letter: coverLetter , isEdit: isEdit  }
+                data: { proposal_id: id, cover_letter: coverLetter, isEdit: isEdit }
             });
-
-
-
             if (response.error === false) {
-               
                 MySwal.fire({
-                    title: (isEdit)?"Application Update successfully":"Application re-apply  successfully",
+                    title: (isEdit) ? "Application Update successfully" : "Application re-apply  successfully",
                     icon: "success",
                     confirmButtonText: "OK",
                 });
-                  onClose();
+                onClose();
             }
         } catch (error) {
             console.error("Error in API request:", error);
@@ -101,7 +81,7 @@ export const EditApplicationModal: React.FC<TitleModalProps> = ({ id,coverLetter
             <div className="air-modal-items air-modal-import-resume-modal">
                 <div className="airModal-content">
                     <div className="airModal-header">
-                        <h2 className="airModal-title h2">{(isEdit)?"Edit Applied Job":"Re-Apply for This Job" } </h2>
+                        <h2 className="airModal-title h2">{(isEdit) ? "Edit Applied Job" : "Re-Apply for This Job"} </h2>
                         <button className="airModal-close" type="button" onClick={handleClose}>
                             <div className="air-icon">
                                 <img className="img-fluid" src="/assets/images/close-icon.svg" alt="" title="" />

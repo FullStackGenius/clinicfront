@@ -131,7 +131,7 @@ function OurFreelancer() {
 				setStateChangeTrigger(true);
 				setLoading(false);
 			}, 200);
-			
+
 		}
 	};
 
@@ -200,9 +200,9 @@ function OurFreelancer() {
 
 
 	return (
-		
-            <>
-			 <Loader isLoading={loading} />
+
+		<>
+			<Loader isLoading={loading} />
 			<Header />
 			<section className="freelancer-banner-section">
 				<div className="main-container">
@@ -216,9 +216,9 @@ function OurFreelancer() {
 								<div className="pr-filter-boxs" onClick={() => setJobType('full-time')}>
 									<div className={`filter-time d-flex align-items-center ${(jobtype === 'full-time') ? "job-time-filter" : ""}`} >
 										{jobtype === 'full-time' ? (
-											<img loading="lazy"className="img-fluid" src="/assets/images/orange-check-circle-icon.svg" alt="" title="" />
+											<img loading="lazy" className="img-fluid" src="/assets/images/orange-check-circle-icon.svg" alt="" title="" />
 										) : (
-											<img loading="lazy"className="img-fluid" src="/assets/images/black-circle-icons.svg" alt="" title="" />
+											<img loading="lazy" className="img-fluid" src="/assets/images/black-circle-icons.svg" alt="" title="" />
 										)}
 										<span>Full time</span>
 									</div>
@@ -226,9 +226,9 @@ function OurFreelancer() {
 								<div className="pr-filter-boxs" onClick={() => setJobType('part-time')}>
 									<div className={`freelance-filter-block d-flex align-items-center ${(jobtype === 'part-time') ? "job-time-filter" : ""} `} >
 										{jobtype === 'part-time' ? (
-											<img loading="lazy"className="img-fluid" src="/assets/images/orange-check-circle-icon.svg" alt="" title="" />
+											<img loading="lazy" className="img-fluid" src="/assets/images/orange-check-circle-icon.svg" alt="" title="" />
 										) : (
-											<img loading="lazy"className="img-fluid" src="/assets/images/black-circle-icons.svg" alt="" title="" />
+											<img loading="lazy" className="img-fluid" src="/assets/images/black-circle-icons.svg" alt="" title="" />
 										)}
 										<span>Part time</span>
 									</div>
@@ -253,55 +253,55 @@ function OurFreelancer() {
 						</div>
 						<div className="project-filter-items" >
 							<div className="project-rows d-flex flex-wrap">
-								
-										{freelancers.length > 0 ? (
-											<>
-												{freelancers.map((item, index) => (
-													<div key={index} className="colm-3 d-flex flex-wrap">
-														<div className="project-items-boxs">
-															<div className="project-infos">
-																<div className="pr-hour">
-																	<p>${item?.user_details?.hourly_rate}/hr</p>
-																</div>
-																<div className="pr-content">
-																	<div className="pr-profile">
-																		<img loading="lazy"className="img-fluid" src={item.profile_image_path} alt="" title="" />
-																	</div>
-																	<h5>{item.name.charAt(0).toUpperCase() + item.name.slice(1)} {item.last_name}</h5>
-																	<p>{item?.user_details?.profile_headline}</p>
-																	<div className="pr-user-rating d-flex align-items-center justify-content-center">
-																		<div className="pr-rating-icon">
-																			<img loading="lazy"className="img-fluid" src="/assets/images/small-star-icon.svg" alt="" title="" />
-																		</div>
-																		<span className="pr-text-body-sm">{getUserRating(item.ratings)}</span>
-																		<span className="pr-text-body-sm">({item.completed_jobs_count} jobs)</span>
-																	</div>
-																	{item.skills.length > 0 && (
-																		<div className="pr-tags d-flex flex-wrap align-items-center justify-content-center">
-																			{item.skills.map((item, index) => (
-																				<a key={index} href="#">{item.name}</a>
-																			))}
-																		</div>
-																	)}
-																</div>
-															</div>
-															<div className="pr-learn-btns">
-																<Link to={`/freelancer/view-profile/${item.id}`}>Learn More</Link>
-															</div>
-														</div>
-													</div>
-												))}
-											</>
-										) : (
-											<div className="colm-3 d-flex flex-wrap">
+
+								{freelancers.length > 0 ? (
+									<>
+										{freelancers.map((item, index) => (
+											<div key={index} className="colm-3 d-flex flex-wrap">
 												<div className="project-items-boxs">
 													<div className="project-infos">
-														<p>No Freelancer Found</p>
+														<div className="pr-hour">
+															<p>${item?.user_details?.hourly_rate}/hr</p>
+														</div>
+														<div className="pr-content">
+															<div className="pr-profile">
+																<img loading="lazy" className="img-fluid" src={item.profile_image_path} alt="" title="" />
+															</div>
+															<h5>{item.name.charAt(0).toUpperCase() + item.name.slice(1)} {item.last_name}</h5>
+															<p>{item?.user_details?.profile_headline}</p>
+															<div className="pr-user-rating d-flex align-items-center justify-content-center">
+																<div className="pr-rating-icon">
+																	<img loading="lazy" className="img-fluid" src="/assets/images/small-star-icon.svg" alt="" title="" />
+																</div>
+																<span className="pr-text-body-sm">{getUserRating(item.ratings)}</span>
+																<span className="pr-text-body-sm">({item.completed_jobs_count} jobs)</span>
+															</div>
+															{item.skills.length > 0 && (
+																<div className="pr-tags d-flex flex-wrap align-items-center justify-content-center">
+																	{item.skills.map((item, index) => (
+																		<a key={index} href="#">{item.name}</a>
+																	))}
+																</div>
+															)}
+														</div>
+													</div>
+													<div className="pr-learn-btns">
+														<Link to={`/freelancer/view-profile/${item.id}`}>Learn More</Link>
 													</div>
 												</div>
 											</div>
-										)}
-									
+										))}
+									</>
+								) : (
+									<div className="colm-3 d-flex flex-wrap">
+										<div className="project-items-boxs">
+											<div className="project-infos">
+												<p>No Freelancer Found</p>
+											</div>
+										</div>
+									</div>
+								)}
+
 
 							</div>
 						</div>
@@ -309,10 +309,10 @@ function OurFreelancer() {
 					{freelancers && lastPage > 1 && (<PaginationHtml lastPage={lastPage} getPagination={getPagination} currentPage={currentPage} handlePageChange={handlePageChange} />)}
 				</div>
 			</section>
-			
+
 			<Footer />
-			</>
-       
+		</>
+
 	);
 }
 

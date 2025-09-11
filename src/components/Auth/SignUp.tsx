@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { googleLogout, useGoogleLogin, TokenResponse } from '@react-oauth/google';
 import { appleAuthHelpers } from 'react-apple-signin-auth';
@@ -50,7 +50,7 @@ interface FormData {
 const SignUp: React.FC = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	
+	 const firstNameRef = useRef<HTMLInputElement>(null);
 
 	const searchParams = new URLSearchParams(location.search);
 	let CheckRole:any ;
@@ -234,6 +234,13 @@ const SignUp: React.FC = () => {
 			handleSubmit();
 		}
     }, [ profile ]);
+
+	 useEffect(() => {
+    // Set cursor position to the first input field when component loads
+    if (firstNameRef.current) {
+      firstNameRef.current.focus();
+    }
+  }, []);
 	
 	/** promisified version - promise resolves with response on success or undefined on error -- note that this only work with usePopup: true */
 	const appleLogin = async() => {
@@ -280,6 +287,7 @@ const SignUp: React.FC = () => {
                      <div className="form-row form-row-first">
                         <label htmlFor="first_name">First Name<span style={{color: "red"}}>*</span></label>
                         <input
+						 ref={firstNameRef}
 						  type="text"
 						  name="first_name"
 						  id="first_name"

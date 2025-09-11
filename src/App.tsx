@@ -1,5 +1,4 @@
-// src/App.tsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserRedux } from './redux/userSlice';
@@ -17,8 +16,8 @@ import ChatNotification from './components/ChatNotification';
 import { initializeEcho } from './lib/echo'; // Import Echo initialization
 function App() {
   const dispatch = useDispatch<AppDispatch>();
-  //const [user, setUser] = useState<any>(null);
- const user = useSelector((state: RootState) => state.user.user); // ✅ use Redux
+
+  const user = useSelector((state: RootState) => state.user.user); // ✅ use Redux
   const [echoInitialized, setEchoInitialized] = useState(false);  // Track Echo initialization
 
   useEffect(() => {
@@ -28,7 +27,6 @@ function App() {
     if (localUser && token) {
       const parsedUser = JSON.parse(localUser);
       dispatch(setUserRedux(parsedUser));  // Dispatch user to global state (if using Redux)
-      //setUser(parsedUser);
 
       // Initialize Echo once after login (if not already initialized)
       if (!echoInitialized) {
@@ -38,38 +36,28 @@ function App() {
     }
   }, [dispatch, echoInitialized]);  // Depend on echoInitialized to trigger reinitialization
 
-
-  // useEffect(() => {
-  //   const localUser = localStorage.getItem('user'); // Get the item from local storage
-  //   if (localUser) {
-  //     const parsedUser = JSON.parse(localUser); // Parse only if it's not null
-  //     dispatch(setUserRedux(parsedUser));
-  //     setUser(parsedUser); // save to local state
-  //   }
-  // }, [dispatch]);
-
   return (
     <div>
       <BrowserRouter>
-      {user?.id && (
-        <ChatNotification userId={user.id} />
-      )}
-      <ScrollToTop /> 
+        {user?.id && (
+          <ChatNotification userId={user.id} />
+        )}
+        <ScrollToTop />
         <Routes>
-      
-			{/* Public Routes */}
-			{PublicRoutes()}
 
-			{/* Auth Routes */}
-			{AuthRoutes()}
+          {/* Public Routes */}
+          {PublicRoutes()}
 
-			{/* Freelancer Routes (Protected Routes for freelancers) */}
-			{FreelancerRoutes()}
+          {/* Auth Routes */}
+          {AuthRoutes()}
 
-			{/* Client Routes (Protected Routes for clients) */}	
-			{ClientRoutes()}	
-      {/* Catch-all route for 404 */}
-      <Route path="*" element={<NotFound />} />
+          {/* Freelancer Routes (Protected Routes for freelancers) */}
+          {FreelancerRoutes()}
+
+          {/* Client Routes (Protected Routes for clients) */}
+          {ClientRoutes()}
+          {/* Catch-all route for 404 */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </div>

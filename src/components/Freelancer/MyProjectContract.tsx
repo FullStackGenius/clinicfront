@@ -2,32 +2,9 @@ import React, { useEffect, useState } from 'react'
 import AuthLayout from '../layouts/AuthLayout'
 import Header from '../layouts/partials/Header'
 import axiosInstance from "../../_helpers/axiosInstance";
-import PaginationHtml from '../Common/PaginationHtml';
 import helpers from '../../_helpers/common';
-import { Link } from 'react-router-dom';
-import ContentLoader from '../Common/ContentLoader';
 import ContractComponent from '../Common/ContractComponent';
 import Loader from '../Common/Loader';
-// Define TypeScript interfaces for API response
-
-
-
-
-interface ContractPagination {
-    current_page: number;
-    data: Contract[];
-    first_page_url: string;
-    from: number;
-    last_page: number;
-    last_page_url: string;
-    links: PaginationLink[];
-    next_page_url: string | null;
-    path: string;
-    per_page: number;
-    prev_page_url: string | null;
-    to: number;
-    total: number;
-}
 
 interface Contract {
     id: number;
@@ -100,14 +77,6 @@ interface Freelancer {
     profile_image_path: string;
 }
 
-
-interface PaginationLink {
-    url: string | null;
-    label: string;
-    active: boolean;
-}
-
-
 function MyProjectContract() {
     const [loading, setLoading] = useState(true);
     const [contracts, setContracts] = useState<Contract[]>([]);
@@ -116,7 +85,7 @@ function MyProjectContract() {
     const [perPage, setPerPage] = useState(10);
     const [activeTab, setActiveTab] = useState("all");
 
-    const tabs = ["all", 'active','pending', 'completed', 'terminated'];
+    const tabs = ["all", 'active', 'pending', 'completed', 'terminated'];
     useEffect(() => {
         fetchProjects(currentPage);
     }, [currentPage, activeTab]);
@@ -136,15 +105,13 @@ function MyProjectContract() {
                 setLastPage(response.data.contracts.last_page);
 
             }
-           // setLoading(false)
         } catch (error) {
             console.error("Error fetching projects:", error);
-        }finally {
-			setTimeout(() => {
-				setLoading(false);
-			}, 500);
-			//setLoading(false);
-		}
+        } finally {
+            setTimeout(() => {
+                setLoading(false);
+            }, 500);
+        }
     };
 
     const getPagination = () => {
@@ -184,10 +151,9 @@ function MyProjectContract() {
         }
     };
 
-
     return (
         <>
-       <Loader isLoading={loading} />
+            <Loader isLoading={loading} />
             <AuthLayout>
                 <Header />
 
@@ -197,18 +163,12 @@ function MyProjectContract() {
 
                         <div className="job-title-block">
                             <h1>My Contract</h1>
-                            {/* <div className="earnings-text">Total earnings made: <span className="earning-prices">$00.00</span></div> */}
                         </div>
-
-                        {/* <div className="tab-title-block">
-                            <h3>Contracts by Stage</h3>
-                        </div> */}
-
                         <div className="jobs-tab-items">
 
                             <div className="tabs-horizontal-items">
                                 <div className="horizontal-tab-list">
-                                {tabs && (  <ul>
+                                    {tabs && (<ul>
                                         {tabs.map((tab) => (
                                             <li
                                                 key={tab}
@@ -222,30 +182,23 @@ function MyProjectContract() {
                                                 {helpers.toTitleCase(tab)}
                                             </li>
                                         ))}
-                                    </ul> )}
+                                    </ul>)}
                                 </div>
                             </div>
-
                             <div className="tab-card-section">
                                 {activeTab === "all" && <ContractComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} contracts={contracts} contractPageFor="freelancer" />}
                                 {activeTab === "active" && <ContractComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} contracts={contracts} contractPageFor="freelancer" />}
                                 {activeTab === "pending" && <ContractComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} contracts={contracts} contractPageFor="freelancer" />}
                                 {activeTab === "completed" && <ContractComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} contracts={contracts} contractPageFor="freelancer" />}
                                 {activeTab === "terminated" && <ContractComponent getPagination={getPagination} lastPage={lastPage} handlePageChange={handlePageChange} currentPage={currentPage} contracts={contracts} contractPageFor="freelancer" />}
-
-
                             </div>
-
                         </div>
-
-
-
                     </div>
                 </section>
             </AuthLayout>
-            
-</>
-       
+
+        </>
+
 
     )
 }

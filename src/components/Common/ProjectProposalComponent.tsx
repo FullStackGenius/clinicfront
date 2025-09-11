@@ -95,9 +95,6 @@ const ProjectProposalComponent: React.FC<ContractComponentProps> = ({ rejectNowB
                                                     <div className="span-3-colm">
                                                         <div className="contract-info-content">
                                                             <h4 className="openings-title">Sent by: {helpers.toTitleCase(proposal?.freelancer_user?.name) + " " + proposal?.freelancer_user?.last_name}</h4>
-
-
-                                                            {/* <div className="openings-text">Metric Mission</div> */}
                                                             <div className="opening-status-text">
                                                                 <span>Send on: {helpers.formatDate(proposal?.created_at)}</span>
                                                             </div>
@@ -157,31 +154,15 @@ const ProjectProposalComponent: React.FC<ContractComponentProps> = ({ rejectNowB
                                     <div className="tab-span-colm-3">
                                         <div className="d-flex tab-btns-grid">
                                             <div className="tab-btns-items">
-                                                {/* <a className="tab-view-btns" href="#" onClick={(e) => e.preventDefault()} >${proposal.bid_amount}</a> */}
-                                                {(proposal.status === "pending" || proposal.status === "rejected" ) && (
+                                                {(proposal.status === "pending" || proposal.status === "rejected") && (
                                                     <a className="tab-time-btns" href="#" onClick={() => hireNowButton(proposal)}>Hire Now</a>
                                                 )}
                                                 {proposal.status === "pending" && (
                                                     <a className="tab-time-btns" href="#" onClick={() => rejectNowButton(proposal)}>Reject Now</a>
                                                 )}
-                                                {/* {proposal.status === "hired" && ( */}
-                                                    <Link className="tab-view-btns" to={`/chat/${proposal.freelancer_id}`}>Start Chat</Link>
-                                                {/* )} */}
+                                                <Link className="tab-view-btns" to={`/chat/${proposal.freelancer_id}`}>Start Chat</Link>
                                                 <Link className="tab-view-btns" to={`/freelancer/view-profile/${proposal.freelancer_id}`}>View Applicant</Link>
-                                                {/* {(project.project_status === 3 || project.project_status === 4 || project.project_status === 5) && (
-                                                    <Link className="tab-message-btns" to={`/client/project-proposal/${project.id}`}>view Proposal</Link>
-                                                )} */}
-
-                                                {/* <a className="tab-time-btns" href="#">Time Sheet</a> */}
-                                                {/* {(contractPageFor == "client") ? <Link to={`/chat/${proposal?.freelancer?.id}`}>Start chat</Link> : <Link to={`/chat/${proposal?.client?.id}`}>Start chat</Link>} */}
-                                                {/* <Link to={`/chat/${contract?.client?.id}`}>Start chat</Link>
-                                                <Link to={`/chat/${contract?.freelancer?.id}`}>Start chat</Link> */}
                                             </div>
-                                            {/* <div className="open-action-btn">
-                        <button type="button" aria-expanded="false" data-ev-label="dropdown-secondary-toggle" className="air-btn-toggle">
-                          <span className="open-icon"><img className="img-fluid" src="/assets/images/three-dots-icon.svg" alt="" title="" /></span>
-                        </button>
-                      </div> */}
                                         </div>
                                     </div>
                                 </div>

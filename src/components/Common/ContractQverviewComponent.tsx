@@ -65,12 +65,10 @@ interface ContractQverviewProps {
 
 }
 
-
-
 const ContractQverviewComponent: React.FC<ContractQverviewProps> = ({ contractMilestone, contractData, contractPaymentDetail, onFormSubmit }) => {
     const [loadingMilestones, setLoadingMilestones] = useState<{ [key: number]: boolean }>({});
     const user = useSelector((state: RootState) => state.user.user);
-  
+
     const releasPayment = async (contractId: number, milestoneId: number) => {
         setLoadingMilestones(prev => ({ ...prev, [milestoneId]: true }));
         try {
@@ -126,9 +124,7 @@ const ContractQverviewComponent: React.FC<ContractQverviewProps> = ({ contractMi
     }
 
     const handleShowTransaction = async (milestoneId: number) => {
-
         try {
-            
             const response: any = await axiosInstance({
                 url: 'get-payment-transaction-detail',
                 method: "POST",
@@ -138,7 +134,7 @@ const ContractQverviewComponent: React.FC<ContractQverviewProps> = ({ contractMi
             let milestoneRes = response.data.detail;
             let details = JSON.parse(response.data.detail.raw_data);
             if (response.error === false) {
-               
+
                 MySwal.fire({
                     title: 'Transaction Details',
                     html: (
@@ -150,7 +146,6 @@ const ContractQverviewComponent: React.FC<ContractQverviewProps> = ({ contractMi
                             <p><strong>Reference:</strong> {milestoneRes.transfer_group}</p>
                         </div>
                     ),
-                    // icon: 'info',
                     showCloseButton: true,
                     confirmButtonText: 'Close',
                     confirmButtonColor: '#FE6002',
@@ -161,14 +156,10 @@ const ContractQverviewComponent: React.FC<ContractQverviewProps> = ({ contractMi
             console.error("Error fetching projects:", error);
         } finally {
         }
-
-
-
     };
 
     return (
         <>
-
             <div className="qa-tab-card-sec">
                 <div className="overview-tab-content">
                     <div className="overview-grid-container">
@@ -182,12 +173,6 @@ const ContractQverviewComponent: React.FC<ContractQverviewProps> = ({ contractMi
                                     <div className="amount-header">In Enscrow</div>
                                     <div className="amount-value">${contractPaymentDetail?.in_enscrow}</div>
                                 </div>
-                                {/* {contractMilestone && contractMilestone.map((milestone: any, index: number) => (
-                                        <div key={index} className="amount-cell-items span-6-colm">
-                                            <div className="amount-header">{milestone.title}  ({(milestone.status == 'pending') ? "pending" : "paid"})</div>
-                                            <div className="amount-value">${milestone?.amount}</div>
-                                        </div>
-                                    ))} */}
                                 <div className="amount-cell-items span-6-colm font-bold">
                                     <div className="amount-header">Milestones Paid ({contractMilestone
                                         ?.filter((milestone: any) => milestone.status === 'paid').length})</div>
@@ -218,8 +203,6 @@ const ContractQverviewComponent: React.FC<ContractQverviewProps> = ({ contractMi
                         </div>
                     </div>
                 </div>
-
-
                 <div className="milestones-items">
                     <div className="milestones-gird-container">
                         <div className="span-lg-colm-7">
@@ -247,12 +230,10 @@ const ContractQverviewComponent: React.FC<ContractQverviewProps> = ({ contractMi
                                                                 <span data-test="milestone-amount" className="milestone-deposit">${milestone.amount}</span>
                                                                 {(milestone.status == 'paid') ? <>
                                                                     <span className="air-badge-bars">
-                                                                        <span className="air-badge bg-light">Paid <i className="fa-solid fa-circle-info"></i> </span>  <span style={{ cursor: "pointer"}} onClick={() => handleShowTransaction(milestone?.id)}><img className="img-fluid" src="/assets/images/icons8-info-black.svg" alt="" title="" /> </span> 
+                                                                        <span className="air-badge bg-light">Paid <i className="fa-solid fa-circle-info"></i> </span>  <span style={{ cursor: "pointer" }} onClick={() => handleShowTransaction(milestone?.id)}><img className="img-fluid" src="/assets/images/icons8-info-black.svg" alt="" title="" /> </span>
                                                                     </span>
                                                                 </> : ""}
                                                             </div>
-                                                            {/* {(milestone.status == 'pending') ? <><div className="release-payment-btns"><button className="qa-release-payment" onClick={() => releasPayment(milestone.contract_id, milestone.id)} disabled={loadingMilestones[milestone.id]} >    {loadingMilestones[milestone.id] ? <ButtonLoader /> : 'Release Payment'}</button></div></> : ''} */}
-
                                                             {milestone.status === 'pending' ? (
                                                                 <>
                                                                     {user && user.role_id === 2 ? (
@@ -282,14 +263,10 @@ const ContractQverviewComponent: React.FC<ContractQverviewProps> = ({ contractMi
                                                                                     )
                                                                                 ) : ""
                                                                             }
-                                                                            {/* <span className="air-badge bg-light" > pending </span> */}
                                                                         </span>
                                                                     )}
                                                                 </>
                                                             ) : (
-                                                                //   <span className="air-badge-bars">
-                                                                //     <span className="air-badge bg-light">{milestone.status}</span>
-                                                                //   </span>
                                                                 <></>
                                                             )}
 
@@ -304,132 +281,14 @@ const ContractQverviewComponent: React.FC<ContractQverviewProps> = ({ contractMi
                                                     </div>
                                                 </div>
                                             </li>))}
-
-
-
-                                        {/* <li className="step-vertical-item">
-
-                                            <div className="step-indicator-item is-completed">
-
-                                                <div className="step-circle">
-                                                    <div className="step-vertical-item-icon">
-                                                        <div className="complete-step-icon">
-                                                            <img className="img-fluid" src="/assets/images/completed-icon.svg" alt="" title="" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="steps-content">
-
-                                                    <div className="milestone-des">
-                                                        <div className="milestone-title">B2b UI/UX Design</div>
-                                                        <div className="d-flex align-items-center badge-with-prices">
-                                                            <span data-test="milestone-amount" className="milestone-deposit">$250.00</span>
-                                                            <span className="air-badge-bars">
-                                                                <span className="air-badge bg-light">Paid</span>
-                                                            </span>
-                                                        </div>
-
-                                                        <div className="milestone-date-block d-flex align-items-center">
-                                                            <div className="date-icon"><img className="img-fluid" src="/assets/images/date-icon.svg" alt="" title="" /></div> <span>Due Oct 10</span>
-                                                        </div>
-
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-
-                                        </li>
-
-
-                                        <li className="step-vertical-item">
-
-                                            <div className="step-indicator-item">
-
-                                                <div className="step-circle">
-                                                    <div className="step-counter">3</div>
-                                                </div>
-
-                                                <div className="steps-content">
-
-                                                    <div className="milestone-des">
-                                                        <div className="milestone-title">B2b UI/UX Design</div>
-
-                                                        <div className="milestone-content-info">
-                                                            <ol>
-                                                                <li>Contracts Management</li>
-                                                                <li>Profile Edit: work history, image, education, basically anything on Linkedin, hourly rate, ...</li>
-                                                                <li>Brand update</li>
-                                                            </ol>
-                                                        </div>
-
-                                                        <div className="d-flex align-items-center badge-with-prices">
-                                                            <span data-test="milestone-amount" className="milestone-deposit">$250.00</span>
-                                                            <span className="air-badge-bars">
-                                                                <span className="air-badge bg-light">Paid</span>
-                                                            </span>
-                                                        </div>
-
-                                                        <div className="milestone-date-block d-flex align-items-center">
-                                                            <div className="date-icon"><img className="img-fluid" src="/assets/images/date-icon.svg" alt="" title="" /></div> <span>Due Nov 24</span>
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div className="release-payment-btns">
-                                                        <button className="qa-release-payment">Release Payment</button>
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-
-                                        </li> */}
-
                                         <li className="step-vertical-item step-add-item">
                                             <div className="step-indicator-item">
-                                                {/* <div className="step-circle">
-                                                    <div className="add-step-vertical-item-icon">
-                                                        <div className="add-step-icon">
-                                                            <img className="img-fluid" src="/assets/images/add-icon.svg" alt="" title="" />
-                                                        </div>
-                                                    </div>
-                                                </div> */}
-                                                {/* <div className="steps-content">
-                                                    <button type="button" data-ev-label="step-indicator-add-step" className="new-milestone-btns"><span className="btn-link-secondary"> Propose a new milestone</span></button>
-                                                </div> */}
                                             </div>
                                         </li>
                                     </ol>
                                 </div>
-                                {/* <div className="manage-milestone-btns-items">
-                                    <button type="button" data-test="manage-milestones-cta" className="manage-btn-secondary">Manage milestones</button>
-                                </div> */}
                             </div>
                         </div>
-
-                        {/* <div className="span-lg-colm-5">
-
-                            <div className="qa-recent-files-boxs">
-
-                                <div className="d-flex align-items-center qa-recent-upload-items">
-                                    <h4 className="block-title">Recent files</h4>
-
-                                    <div className="d-flex align-items-center reload-upload-btns">
-                                        <button type="button" data-test="qa-reload-files-button" data-ev-sublocation="recent-files-refresh-click" className="refresh-btns"><img className="img-fluid" src="/assets/images/reload-icon.svg" alt="" title="" /></button>
-                                        <button type="button" data-test="qa-upload-files-button" data-ev-sublocation="recent-files-upload-click" className="upload-btns">Upload</button>
-                                    </div>
-
-                                </div>
-
-                                <div className="qa-air-illustration">
-                                    <img className="img-fluid" src="/assets/images/upload-image.svg" alt="" title="" />
-                                </div>
-
-                            </div>
-
-                        </div> */}
                     </div>
                 </div>
             </div>

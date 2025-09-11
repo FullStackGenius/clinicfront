@@ -90,11 +90,8 @@ interface ContractComponentProps {
 const MySwal = withReactContent(Swal);
 const ContractComponent: React.FC<ContractComponentProps> = ({ contractPageFor, contracts, lastPage, getPagination, handlePageChange, currentPage }) => {
     const user = useSelector((state: RootState) => state.user.user);
-    // const [submitting, setSubmitting] = useState(false);
     const [submitting, setSubmitting] = useState<Record<number, boolean>>({});
-
     const handleShowTransaction = async (contractId: number) => {
-
         try {
             setSubmitting(prev => ({ ...prev, [contractId]: true }));
             const response: any = await axiosInstance({
@@ -120,7 +117,6 @@ const ContractComponent: React.FC<ContractComponentProps> = ({ contractPageFor, 
                             <p><strong>Reference:</strong> {contact.transfer_group}</p>
                         </div>
                     ),
-                    // icon: 'info',
                     showCloseButton: true,
                     confirmButtonText: 'Close',
                     confirmButtonColor: '#FE6002',
@@ -129,23 +125,16 @@ const ContractComponent: React.FC<ContractComponentProps> = ({ contractPageFor, 
             }
         } catch (error) {
             console.error("Error fetching projects:", error);
-            // setSubmitting(false);
             setSubmitting(prev => ({ ...prev, [contractId]: false }));
         } finally {
-            // setSubmitting(false);
             setSubmitting(prev => ({ ...prev, [contractId]: false }));
 
         }
-
-
-
     };
 
     return (
         <>
             <div className="tab-card-section">
-
-
                 {contracts && contracts.length > 0 ? (
                     <>
                         {contracts.map((contract: any, index: number) => (
@@ -156,21 +145,16 @@ const ContractComponent: React.FC<ContractComponentProps> = ({ contractPageFor, 
                                             <div className="contract-title-block">
                                                 <h2 className="title">{helpers.toTitleCase(contract.project.title)}</h2>
                                             </div>
-
                                             <div className="cta-middle-content">
-
                                                 <div className="cta-grid-container">
                                                     <div className="span-3-colm">
                                                         <div className="contract-info-content">
                                                             {(contractPageFor == "client") ? <> <Link to={`/freelancer/view-profile/${contract?.freelancer?.id}`} ><h4 className="openings-title">Hired to: {helpers.toTitleCase(contract?.freelancer?.name) + " " + contract?.freelancer?.last_name}</h4></Link> </> : <h4 className="openings-title">Posted by: {helpers.toTitleCase(contract?.client?.name) + " " + contract?.client?.last_name}</h4>}
-
-                                                            {/* <div className="openings-text">Metric Mission</div> */}
                                                             <div className="opening-status-text">
                                                                 <span>Posted on: {helpers.formatDate(contract?.project?.created_at)}</span>
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                     <div className="span-9-colm">
                                                         <div className="contract-feedback-info">
                                                             <div className="activity-data-info">
@@ -222,11 +206,6 @@ const ContractComponent: React.FC<ContractComponentProps> = ({ contractPageFor, 
                                         <div className="d-flex tab-btns-grid">
                                             <div className="tab-btns-items">
                                                 <a className="tab-view-btns" href="#" onClick={(e) => e.preventDefault()} >${contract.amount}</a>
-                                                {/* {(project.project_status === 3 || project.project_status === 4 || project.project_status === 5) && (
-                                                    <Link className="tab-message-btns" to={`/client/project-proposal/${project.id}`}>view Proposal</Link>
-                                                )} */}
-
-                                                {/* <a className="tab-time-btns" href="#">Time Sheet</a> */}
                                                 {(contract.status === "active") ? (<>
                                                     {(contractPageFor == "client") ? <Link to={`/chat/${contract?.freelancer?.id}/${contract?.id}`}>Start chat</Link> : <Link to={`/chat/${contract?.client?.id}/${contract?.id}`}>Start chat</Link>}
                                                     {(contractPageFor == "client") ? <><Link to={`/client/contracts-details/${contract?.id}`}>Contract detail</Link><a href="#" onClick={(e) => { e.preventDefault(); handleShowTransaction(contract?.id) }} className="nav-icon">{!submitting[contract?.id] ? 'Txn Details' : 'fetching...'}</a></> : <Link to={`/freelancer/contracts-details/${contract?.id}`}>Contract detail</Link>}
@@ -234,14 +213,7 @@ const ContractComponent: React.FC<ContractComponentProps> = ({ contractPageFor, 
                                                     {user && user.role_id == 2 && <> <Link to={`/contract/payment/${contract?.id}`}>Pay now</Link>
                                                         <p style={{ color: "red" }}>payment for contract is pending</p> </>}
                                                 </>)}
-                                                {/* <Link to={`/chat/${contract?.client?.id}`}>Start chat</Link>
-                                                <Link to={`/chat/${contract?.freelancer?.id}`}>Start chat</Link> */}
                                             </div>
-                                            {/* <div className="open-action-btn">
-                        <button type="button" aria-expanded="false" data-ev-label="dropdown-secondary-toggle" className="air-btn-toggle">
-                          <span className="open-icon"><img className="img-fluid" src="/assets/images/three-dots-icon.svg" alt="" title="" /></span>
-                        </button>
-                      </div> */}
                                         </div>
                                     </div>
                                 </div>
@@ -261,9 +233,6 @@ const ContractComponent: React.FC<ContractComponentProps> = ({ contractPageFor, 
                     </div>
 
                 )}
-
-
-
                 <div className="pagination">
                     {lastPage > 1 && (<PaginationHtml lastPage={lastPage} getPagination={getPagination} currentPage={currentPage} handlePageChange={handlePageChange} />)}
                 </div>

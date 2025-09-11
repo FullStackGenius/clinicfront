@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from "react-router-dom";
 import Header from './layouts/partials/Header';
 import Footer from './layouts/partials/Footer';
-import ContentLoader from './Common/ContentLoader';
-import helpers from "../_helpers/common";
 import axiosInstance from "../_helpers/axiosInstance";
-import PaginationHtml from './Common/PaginationHtml';
 import ResourcesPartComponent from './Common/ResourcesPartComponent';
 import ResourcePaginationHtml from './Common/ResourcePaginationHtml';
 import Loader from './Common/Loader';
@@ -36,26 +32,6 @@ interface PaginationLink {
 	url: string | null;
 	label: string;
 	active: boolean;
-}
-
-interface PaginatedResponse {
-	current_page: number;
-	data: {
-		resource: Resource[];
-		category: Category[];
-	}
-	category: Category[];
-	first_page_url: string;
-	from: number;
-	last_page: number;
-	last_page_url: string;
-	links: PaginationLink[];
-	next_page_url: string | null;
-	path: string;
-	per_page: number;
-	prev_page_url: string | null;
-	to: number;
-	total: number;
 }
 
 interface Category {
@@ -89,7 +65,6 @@ function AllResources() {
 	const fetchPageData = async (page = 1) => {
 		try {
 			setLoading(true);
-			// console.log({ sort_by: sortby, category: jobtype, per_page: perPage, page: page, q: querms })
 			const response: any = await axiosInstance({
 				url: 'get-resources',
 				method: "GET",
@@ -124,12 +99,7 @@ function AllResources() {
 		setCurrentPage(1);
 
 	};
-	const getUserRating = (rating: any) => {
-		if (rating.length > 0) {
-			return rating[0].average_rating;
-		}
-		return 0;
-	}
+
 
 	const handlePageChange = (page: any) => {
 		if (page > 0 && page <= lastPage) {
@@ -175,98 +145,97 @@ function AllResources() {
 	}
 	return (
 		<>
-			  <Loader isLoading={loading} />
-					<Header />
-					<section className="resources-page-section">
-						<div className="main-container">
-							<div className="resources-banner-content">
-								<div className="inner-banner-content">
-									<h1>Resources</h1>
-									<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly</p>
-								</div>
-							</div>
-
-							<div className="resources-filter-section">
-
-								<div className="resources-filter-content">
-									<div className="filter-gird-container">
-										<div className="filter-input-block">
-											<div className="form-group">
-												<input type="search" onKeyDown={searchByKeyword} name="search" placeholder="Search" className="form-control" autoComplete="off" />
-											</div>
-										</div>
-										<div className="filter-input-block">
-											<div className="form-group label-infos">
-												<label>Filter by:</label>
-												<select
-													className="form-control"
-													style={{
-														backgroundImage: `url("/assets/images/down-arrow-icon.svg")`,
-														backgroundRepeat: "no-repeat",
-													
-													  }}
-													value={jobtype}
-													onChange={handleCategoryChange}
-												>
-													<option value="">Category</option>
-													{category && category.map((cat, index) => (
-														<option key={index} value={cat.id}>
-															{cat.name}
-														</option>
-													))}
-												</select>
-
-											</div>
-										</div>
-										<div className="filter-input-block">
-											<div className="form-group label-infos">
-												<label>Filter by:</label>
-												{/* <input type="date" name="" placeholder="text" /> */}
-												<select className="form-control" aria-label="Default select example"
-													value={sortby}
-													onChange={handleSortingChange}
-													style={{
-														backgroundImage: `url("/assets/images/down-arrow-icon.svg")`,
-														backgroundRepeat: "no-repeat",
-													
-													  }}
-												>
-													<option style={{ color: "#574F4A" }} value="">Sort by</option>
-													<option value="desc" >Newest</option>
-													<option value="asc">Oldest</option>
-												</select>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<div className="resources-blog-section">
-
-									<div className="blog-grid-container">
-										{ resources && resources.length > 0 ? (
-											resources.map((resource) => (
-												<ResourcesPartComponent key={resource.id} resource={resource} />
-											))
-										) : (
-											<div className="no-data-found">
-												<p>No resources found.</p>
-											</div>
-										)}
-									</div>
-
-									{resources && lastPage > 1 && (<ResourcePaginationHtml lastPage={lastPage} getPagination={getPagination} currentPage={currentPage} handlePageChange={handlePageChange} />)}
-								</div>
-
-
-							</div>
-
+			<Loader isLoading={loading} />
+			<Header />
+			<section className="resources-page-section">
+				<div className="main-container">
+					<div className="resources-banner-content">
+						<div className="inner-banner-content">
+							<h1>Resources</h1>
+							<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly</p>
 						</div>
-					</section>
+					</div>
 
-					<Footer />
+					<div className="resources-filter-section">
 
-				</>
-		
+						<div className="resources-filter-content">
+							<div className="filter-gird-container">
+								<div className="filter-input-block">
+									<div className="form-group">
+										<input type="search" onKeyDown={searchByKeyword} name="search" placeholder="Search" className="form-control" autoComplete="off" />
+									</div>
+								</div>
+								<div className="filter-input-block">
+									<div className="form-group label-infos">
+										<label>Filter by:</label>
+										<select
+											className="form-control"
+											style={{
+												backgroundImage: `url("/assets/images/down-arrow-icon.svg")`,
+												backgroundRepeat: "no-repeat",
+
+											}}
+											value={jobtype}
+											onChange={handleCategoryChange}
+										>
+											<option value="">Category</option>
+											{category && category.map((cat, index) => (
+												<option key={index} value={cat.id}>
+													{cat.name}
+												</option>
+											))}
+										</select>
+
+									</div>
+								</div>
+								<div className="filter-input-block">
+									<div className="form-group label-infos">
+										<label>Filter by:</label>
+										<select className="form-control" aria-label="Default select example"
+											value={sortby}
+											onChange={handleSortingChange}
+											style={{
+												backgroundImage: `url("/assets/images/down-arrow-icon.svg")`,
+												backgroundRepeat: "no-repeat",
+
+											}}
+										>
+											<option style={{ color: "#574F4A" }} value="">Sort by</option>
+											<option value="desc" >Newest</option>
+											<option value="asc">Oldest</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div className="resources-blog-section">
+
+							<div className="blog-grid-container">
+								{resources && resources.length > 0 ? (
+									resources.map((resource) => (
+										<ResourcesPartComponent key={resource.id} resource={resource} />
+									))
+								) : (
+									<div className="no-data-found">
+										<p>No resources found.</p>
+									</div>
+								)}
+							</div>
+
+							{resources && lastPage > 1 && (<ResourcePaginationHtml lastPage={lastPage} getPagination={getPagination} currentPage={currentPage} handlePageChange={handlePageChange} />)}
+						</div>
+
+
+					</div>
+
+				</div>
+			</section>
+
+			<Footer />
+
+		</>
+
 	);
 }
 

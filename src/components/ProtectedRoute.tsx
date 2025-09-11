@@ -11,17 +11,16 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
-	const dispatch = useDispatch();
-	const user = useSelector((state: RootState) => state.user.user);
-	//console.log('ProtectedRoute user', user);
-	// Check if the user is logged in
-	const loggedIn = checkUserLoggedIn();
+    const dispatch = useDispatch();
+    const user = useSelector((state: RootState) => state.user.user);
+    // Check if the user is logged in
+    const loggedIn = checkUserLoggedIn();
     if (!loggedIn) {
         // Redirect to the login page if the user is not logged in
         return <Navigate to="/sign-in" replace />;
     }
 
-	if (!user) {
+    if (!user) {
         const localUser = localStorage.getItem('user');
         if (localUser) {
             const parsedUser = JSON.parse(localUser);
@@ -32,9 +31,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
         }
     }
 
-	let userRole = user?.role_name || '';
-	//console.log('ProtectedRoute userRole', userRole);
-	//console.log('ProtectedRoute allowedRoles', allowedRoles);
+    let userRole = user?.role_name || '';
     if (!allowedRoles.includes(userRole)) {
         // Redirect to home if the user doesn't have the right role
         return <Navigate to="/" replace />;

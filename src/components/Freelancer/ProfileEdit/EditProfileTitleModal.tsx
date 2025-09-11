@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import helpers from "../../../_helpers/common";
 import ButtonLoader from '../../Common/ButtonLoader';
 import axiosInstance from "../../../_helpers/axiosInstance";
 
@@ -14,24 +13,23 @@ export const EditProfileTitleModal: React.FC<TitleModalProps> = ({ isOpen, onClo
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string>('');
 	const [loading, setLoading] = useState(false);
-	
+
 	useEffect(() => {
 		if (isOpen) {
 			fetchStepQuestions();
 		}
 	}, [isOpen]);
-	
+
 	const fetchStepQuestions = async () => {
 		try {
 			setLoading(true);
 			const response: any = await axiosInstance({
-					url: 'get-user-step-data',
-					method: "POST",
-					data: {name: 'step4'}
-				});
-			//console.log('get-user-step-data step 4', response)
+				url: 'get-user-step-data',
+				method: "POST",
+				data: { name: 'step4' }
+			});
 			var profile_title = response.data.details.user_details.profile_headline;
-			if(profile_title){
+			if (profile_title) {
 				setTitle(profile_title);
 			}
 		} catch (error) {
@@ -40,17 +38,13 @@ export const EditProfileTitleModal: React.FC<TitleModalProps> = ({ isOpen, onClo
 			setLoading(false);
 		}
 	};
-	
+
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		//console.log('handle input change called')
 		const { name, value } = e.target;
-		//clean the value
-		//let clean_val = helpers.cleanString(value);
-		//setTitle(clean_val);
 		setTitle(value);
 		setError('');
 	};
-	
+
 	const validate = (): boolean => {
 		if (title === '') {
 			setError('Enter your title please!.');
@@ -58,19 +52,17 @@ export const EditProfileTitleModal: React.FC<TitleModalProps> = ({ isOpen, onClo
 		}
 		return true;
 	};
-	
+
 	const handleSubmit = async (): Promise<void> => {
 		if (validate()) {
 			try {
 				setSubmitting(true);
 				const response: any = await axiosInstance({
-							url: 'save-profile-headline',
-							method: "POST",
-							data: {headline: title}
-						});
-				//console.log('response', response)
-				
-				if(response.error === 'false'){
+					url: 'save-profile-headline',
+					method: "POST",
+					data: { headline: title }
+				});
+				if (response.error === 'false') {
 					onClose();
 				}
 			} catch (error) {
@@ -80,66 +72,60 @@ export const EditProfileTitleModal: React.FC<TitleModalProps> = ({ isOpen, onClo
 			}
 		}
 	}
-	
+
 	const handleClose = (e: React.MouseEvent) => {
 		onClose();
-		/*if (updated) {
-			const result = window.confirm('Closing the modal will lose your changes?');
-			if (result) onClose();
-		} else {
-			onClose();
-		}*/
 	};
-	//console.log('error', error)
+
 	return (
 		<div id="edit-skill-popup" className="air-modal-popup" style={{ display: isOpen ? 'block' : 'none' }}>
-         <div className="air-modal-items air-modal-import-resume-modal">
-            <div className="airModal-content">
-               <div className="airModal-header">
-					<h2 className="airModal-title h2">Update Profile Title</h2>
-					<button className="airModal-close" type="button" onClick={handleClose}>
-						<div className="air-icon">
-							<img className="img-fluid" src="/assets/images/close-icon.svg" alt="" title="" />
-						</div>
-					</button>
-               </div>
-				<div className="airModal-body">
-					 <div id="step-item-4" className="air-step-items">
+			<div className="air-modal-items air-modal-import-resume-modal">
+				<div className="airModal-content">
+					<div className="airModal-header">
+						<h2 className="airModal-title h2">Update Profile Title</h2>
+						<button className="airModal-close" type="button" onClick={handleClose}>
+							<div className="air-icon">
+								<img className="img-fluid" src="/assets/images/close-icon.svg" alt="" title="" />
+							</div>
+						</button>
+					</div>
+					<div className="airModal-body">
+						<div id="step-item-4" className="air-step-items">
 							<div className="profesional-role-items">
 								<div className="profesional-input">
 									<label>Your Professional role</label>
 									<div className="input-group">
 										<input aria-required="true" type="text" className="air-input" name="title"
-										   placeholder="Enter Your Title" 
-										   value={title}
-										   onChange={handleInputChange} 
+											placeholder="Enter Your Title"
+											value={title}
+											onChange={handleInputChange}
 										/>
-									 </div>
+									</div>
 								</div>
 							</div>
 							{error !== '' ? (
 								<div className="air-form-message form-message-error">
 									<div className="air-icons">
-									   <img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
+										<img className="img-fluid" src="/assets/images/error-icon.svg" alt="" title="" />
 									</div>
 									<span>{error}</span>
 								</div>
 							) : (
 								null
 							)}
-                      
+
+						</div>
+					</div>
+					<div className="airModal-footer">
+						<div className="modal-two-btns d-flex align-items-center justify-space-between">
+							<button type="button" className="air-btns btns-text-light" onClick={handleClose}>Cancel</button>
+							<button type="button" className="air-btns btns-primary" onClick={handleSubmit}>
+								{submitting ? <ButtonLoader /> : 'Save'}
+							</button>
+						</div>
 					</div>
 				</div>
-               <div className="airModal-footer">
-					<div className="modal-two-btns d-flex align-items-center justify-space-between">
-						<button type="button" className="air-btns btns-text-light" onClick={handleClose}>Cancel</button>
-						<button type="button" className="air-btns btns-primary" onClick={handleSubmit}>
-							{submitting ? <ButtonLoader /> : 'Save'}
-						</button>
-					</div>
-               </div>
-            </div>
-         </div>
-      </div>
+			</div>
+		</div>
 	);
 };

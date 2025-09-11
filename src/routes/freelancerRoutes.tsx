@@ -1,5 +1,3 @@
-// src/routes/freelancerRoutes.tsx
-import React from 'react';
 import { Route } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
 import NextBigOpertunity from "../components/Freelancer/Setup/NextBigOpertunity";

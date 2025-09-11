@@ -71,7 +71,7 @@ function Home() {
 	const [subcategories, setSubCategories] = useState<SubCategory[]>([]);
 	const [searchstring, setSearchString] = useState('');
 	const [loading, setLoading] = useState(true);
-	
+
 	const hasFetchedData = useRef(false);
 	const [accountSectionFirst, setAccountSectionFirst] = useState<AccountSectionFirstType>({ content: "", content_image_path: "" });
 	const [flexibleSection, setFlexibleSection] = useState<FlexibleSection>({ content: "", content_image_path: "" });
@@ -106,7 +106,7 @@ function Home() {
 
 	useEffect(() => {
 		if (selectedcategory > 0) {
-			
+
 			const filtered_sub_cat = categories.filter((item) => item.id === selectedcategory);
 			if (filtered_sub_cat.length > 0) {
 				const filtered_data = filtered_sub_cat[0].sub_categories || [];
@@ -118,7 +118,7 @@ function Home() {
 			} else {
 				setSubCategories([]);
 			}
-		
+
 		}
 	}, [selectedcategory]);
 
@@ -297,21 +297,21 @@ function Home() {
 							<div className="custom-rows d-flex flex-wrap">
 
 								{realAccountSection.map((item: RealAccountSection, index) => (
-								// 	<div key={index} className="colm-3 d-flex flex-wrap">
-								// 	<div className="account-result-boxs" onClick={() => handleRedirect(item)}
-								// 		style={{ cursor: "pointer" }}>
-								// 		<h3>{item.name.charAt(0).toUpperCase() + item.name.slice(1)} {(item.last_name) ? item.last_name.charAt(0).toUpperCase() + "." : ""} {(item.country_name) ? ", " + item.country_name : ""}</h3>
-								// 		<div className="result-rating d-flex flex-wrap align-items-center">
-								// 			<div className="col-6">
-								// 				<div className="rating-texts d-flex align-items-center"><img loading="lazy" className="img-fluid" src="/assets/images/orange-star-icon.svg" alt="" title="" /> {item.ratings.length > 0 ? item.ratings[0].average_rating : 0}/5</div>
-								// 			</div>
-								// 			<div className="col-6">
-								// 				<div className="hour-texts">5,970 Hours </div>
-								// 			</div>
-								// 		</div>
-								// 	</div>
+									// 	<div key={index} className="colm-3 d-flex flex-wrap">
+									// 	<div className="account-result-boxs" onClick={() => handleRedirect(item)}
+									// 		style={{ cursor: "pointer" }}>
+									// 		<h3>{item.name.charAt(0).toUpperCase() + item.name.slice(1)} {(item.last_name) ? item.last_name.charAt(0).toUpperCase() + "." : ""} {(item.country_name) ? ", " + item.country_name : ""}</h3>
+									// 		<div className="result-rating d-flex flex-wrap align-items-center">
+									// 			<div className="col-6">
+									// 				<div className="rating-texts d-flex align-items-center"><img loading="lazy" className="img-fluid" src="/assets/images/orange-star-icon.svg" alt="" title="" /> {item.ratings.length > 0 ? item.ratings[0].average_rating : 0}/5</div>
+									// 			</div>
+									// 			<div className="col-6">
+									// 				<div className="hour-texts">5,970 Hours </div>
+									// 			</div>
+									// 		</div>
+									// 	</div>
 
-								// </div>
+									// </div>
 									<div key={index} className="colm-3 d-flex flex-wrap">
 										<div className="account-result-boxs" onClick={() => handleRedirect(item)}
 											style={{ cursor: "pointer" }}>
@@ -320,11 +320,11 @@ function Home() {
 												<div className="col-6">
 													<div className="rating-texts d-flex align-items-center">
 														{/* <img loading="lazy" className="img-fluid" src="/assets/images/orange-star-icon.svg" alt="" title="" /> {item.star_rating}/5  */}
-													<StarRating rating={Number(item.star_rating)}/>
+														<StarRating rating={Number(item.star_rating)} />
 													</div>
 												</div>
 												<div className="col-6">
-													<div className="hour-texts">{ item.total_hours?.toLocaleString() } Hours </div>
+													<div className="hour-texts">{item.total_hours?.toLocaleString()} Hours </div>
 												</div>
 											</div>
 										</div>
@@ -418,7 +418,7 @@ function Home() {
 					</div>
 				</div>
 			</section>
-			
+
 			<section className="hm-solution-section">
 				<div className="main-container">
 					<div className="row">
@@ -459,7 +459,7 @@ function Home() {
 													<h3>{item.title}</h3>
 												</div>
 											</div>
-											<p  dangerouslySetInnerHTML={{ __html: item.content }}></p>
+											<p dangerouslySetInnerHTML={{ __html: item.content }}></p>
 										</div>
 									</div>
 								))}
